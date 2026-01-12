@@ -1,0 +1,102 @@
+syntax = "proto2";
+
+package st.planning;
+
+// option go_package = "st.proto.ai/onboard/planning.selector/proto/selector_debug";
+
+import "modules/cnoa_pnc/planning/proto/trajectory_point.proto";
+import "modules/cnoa_pnc/planning/proto/lane_change.proto";
+
+// For selector cost function debug.
+message SelectorFeatureCost {
+  optional string name = 1;
+  optional double cost = 2;
+  repeated string extra_info = 3;
+  repeated string cost_value_info = 4;
+}
+
+message TrajectoryCost {
+  optional string start_lane_id = 1;
+  repeated SelectorFeatureCost features = 2;
+  optional double sum_common = 3;
+  optional double sum = 4;
+  optional SelectorStateDebugProto selector_state = 5;
+  optional LaneChangeStage lc_stage = 6;
+}
+
+message SelectorStateDebugProto {
+  optional int64 best_traj_time = 1;
+  optional int64 best_threshold = 2;
+  optional bool is_last_traj = 3;
+  optional bool is_final_traj = 4;
+}
+
+// For data dumping.
+message SelectorFeature {
+  optional string name = 1;
+  repeated string sub_names = 2;
+  repeated double values = 3;
+  optional bool is_common = 4;
+  repeated string extra_info = 5;
+}
+
+message TrajectoryFeature {
+  optional string start_lane_id = 1;
+  repeated SelectorFeature features = 2;
+}
+
+message SelectorTrajectory {
+  repeated ApolloTrajectoryPointProto trajectory_points = 1;
+}
+
+// For selector scoring net output debug.
+message TrajectoryScore {
+  optional uint64 start_lane_id = 1;
+  optional double score = 2;
+  optional double score_to_cost = 3;
+  optional double weighted_score_to_cost = 4;
+}
+
+message SelectorMLData {
+  optional bool is_filtered = 1;
+
+  repeated TrajectoryFeature candidate_trajs_features = 100;
+  repeated SelectorTrajectory candidate_trajs = 101;
+
+  message CandidateLaneStats {
+    optional int32 lc_num_to_targets = 1;
+    optional double driving_dist = 2;
+    optional double length_along_route = 3;
+    optional bool is_right_most_lane = 4;
+    optional double len_before_intersection = 5;
+  }
+  repeated CandidateLaneStats candidate_lane_stats = 107;
+
+  optional TrajectoryFeature expert_traj_features = 200;
+  optional SelectorTrajectory expert_traj = 201;
+}
+
+message SelectorDebugProto {
+  // For selector cost function debug.
+  repeated TrajectoryCost traj_costs = 1;
+
+  // For data dumping.
+  optional SelectorMLData ml_data = 50;
+
+  // For selector scoring net output debug.
+  repeated TrajectoryScore traj_scores_by_net = 200;
+
+  // For DebugString
+  repeated string DebugString = 202;
+
+  reserved 100 to 113, 120;
+}
+
+message SpeedLimitCostOutput {
+  optional double progress_factor = 1;
+  optional double slow_leader_factor = 2;
+  optional double lane_speed_diff_ratio = 3;
+  optional double driving_style_factor = 4;
+  optional double slow_av_factor = 5;
+  optional double speed_limit_cost = 6;
+}

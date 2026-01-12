@@ -1,0 +1,34 @@
+vehicle_geometry_params {
+  front_edge_to_center: 3.491
+  back_edge_to_center: 0.839
+  left_edge_to_center: 0.9165
+  right_edge_to_center: 0.9165
+  length: 4.31 
+  width: 1.833
+  height: 1.678
+  min_turn_radius: 5.2
+  wheel_base: 2.62
+  wheel_rolling_radius: 0.333
+  left_mirror {
+    x: 1.953
+    y: 0.899  
+    z: 1.135    
+    length: 0.326
+    width: 0.255
+    height: 1.135
+  }
+  right_mirror {
+    x: 1.938
+    y: -0.894
+    z: 1.136
+    length: 0.326
+    width: 0.255
+    height: 1.135
+  }
+  platform: "sc3"
+}
+vehicle_drive_params {
+   max_steer_angle: 9.39
+   steer_ratio: 14.74
+}
+

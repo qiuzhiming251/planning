@@ -1,0 +1,115 @@
+stages:
+- submit
+- processing
+- approval
+- deployment
+
+variables:
+  # Default variables that can be overridden
+  WORKFLOW_ID_FILE: "workflow_id.txt"
+  BUILD_BRANCH: "dev/orin/b_driving_ld"
+  BUILD_MANIFEST: "manifest_scm.xml"
+  PLATFORM_TYPE: "x2b"
+  VEH_TYPE: "hc25"
+  BUILD_TYPE: "all"
+
+# Define reusable function at the bottom of the file
+.monitor_workflow_function:
+  script:
+  - |
+    WORKFLOW_ID=$(cat $WORKFLOW_ID_FILE)
+    MAX_RETRIES=12  # 1 hour total with 5s intervals
+    RETRY_COUNT=0
+    LAST_KNOWN_STATUS=""
+
+    echo "Monitoring workflow: $WORKFLOW_ID"
+
+    while [ $RETRY_COUNT -le $MAX_RETRIES ]; do
+      # Stream logs with timeout and save last timestamp
+      timeout 300 argo logs --follow $WORKFLOW_ID --since 5s || true
+
+      # Get status with timeout and archival check
+      STATUS_JSON=$(timeout 30 argo get $WORKFLOW_ID -o json 2>/dev/null || echo "{}")
+      CURRENT_STATUS=$(echo "$STATUS_JSON" | jq -r '.status.phase // "Unknown"')
+
+      # Handle archival (workflow no longer exists)
+      if [ $(echo "$STATUS_JSON" | jq '.metadata == null') = "true" ]; then
+        if [ "$LAST_KNOWN_STATUS" = "Succeeded" ]; then
+          echo "Workflow archived after success"
+          exit 0
+        else
+          echo "Workflow may archived unexpectedly or it might just because connection reset"
+          if [ $RETRY_COUNT -le $MAX_RETRIES ]; then
+            echo "sleep 10s before retrying to logging."
+            sleep 10
+          else
+            exit 1
+          fi  
+        fi
+      fi
+
+      # Update last known status
+      if [ "$CURRENT_STATUS" != "Unknown" ]; then
+        LAST_KNOWN_STATUS=$CURRENT_STATUS
+      fi
+
+      # Exit conditions
+      case $LAST_KNOWN_STATUS in
+        "Succeeded") exit 0 ;;
+        "Failed"|"Error") exit 1 ;;
+      esac
+
+      # Increment retries only on unknown status
+      if [ "$CURRENT_STATUS" = "Unknown" ]; then
+        RETRY_COUNT=$((RETRY_COUNT+1))
+        echo "Connection issues (retry $RETRY_COUNT/$MAX_RETRIES)"
+        sleep 30
+      else
+        echo "Reconnecting to logs... (status: $CURRENT_STATUS)"
+        sleep 5
+      fi
+    done
+
+    echo "Max retries reached without confirmation"
+    exit 1
+
+submit_argo_workflow:
+  stage: submit
+  variables:
+    KUBECONFIG: $AED_CICD_KUBECONFIG
+  image: harbor-adas.byd.com/byd-image/software/argo/base:zou.wenquan_20250214
+  rules: 
+  - if: $CI_PIPELINE_SOURCE == "schedule"
+  - if: $CI_COMMIT_TAG
+
+  script:
+  - |
+    REVISION="$CI_COMMIT_REF_NAME"
+    if [[ ! -z "$CI_COMMIT_TAG" ]]; then
+      # This is required for manifest to use tag
+      REVISION="refs/tags/$CI_COMMIT_TAG"
+    fi
+    # Submit workflow and capture ID
+    argo submit --generate-name "gitlab-ci-triggered-" \
+      --from workflowtemplate/general-cnoa-pnc-build-template --entrypoint general-cnoa-pnc-build \
+      -p cnoa_revision="$REVISION" \
+      -p branch_name="$BUILD_BRANCH" \
+      -p build_manifest="$BUILD_MANIFEST" \
+      -p platform_type="$PLATFORM_TYPE" \
+      -p veh_type="$VEH_TYPE" \
+      -p build_type="$BUILD_TYPE" \
+      | grep -oP 'Name:\s+\K\S+' > $WORKFLOW_ID_FILE
+  artifacts:
+    paths:
+    - $WORKFLOW_ID_FILE
+
+monitor_processing:
+  stage: processing
+  variables:
+    KUBECONFIG: $AED_CICD_KUBECONFIG
+  image: harbor-adas.byd.com/byd-image/software/argo/base:zou.wenquan_20250214
+  extends: .monitor_workflow_function
+  rules: 
+  - if: $CI_PIPELINE_SOURCE == "schedule"
+  - if: $CI_COMMIT_TAG
+  needs: [ "submit_argo_workflow" ]

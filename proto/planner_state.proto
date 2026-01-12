@@ -1,0 +1,195 @@
+syntax = "proto2";
+
+package st.planning;
+// option go_package = "st.proto.ai/onboard/planning.proto/planning.state";
+
+import "modules/cnoa_pnc/planning/proto/timestamp.proto";
+import "modules/cnoa_pnc/planning/proto/lite_common.proto";
+import "modules/cnoa_pnc/planning/proto/lane_path.proto";
+import "modules/cnoa_pnc/planning/proto/lane_point.proto";
+import "modules/cnoa_pnc/planning/proto/affine_transformation.proto";
+import "modules/cnoa_pnc/planning/proto/constraint.proto";
+import "modules/cnoa_pnc/planning/proto/traffic_light_info.proto";
+import "modules/cnoa_pnc/planning/proto/lane_change.proto";
+import "modules/cnoa_pnc/planning/proto/selector_state.proto";
+import "modules/cnoa_pnc/planning/proto/autonomy_state.proto";
+// import "modules/cnoa_pnc/planning/proto/planner.proto";
+import "modules/cnoa_pnc/planning/proto/trajectory.proto";
+import "modules/cnoa_pnc/planning/proto/route.proto";
+import "modules/cnoa_pnc/planning/proto/initializer.proto";
+import "modules/cnoa_pnc/planning/proto/planner_object.proto";
+import "modules/cnoa_pnc/planning/proto/smooth_reference_line.proto";
+import "modules/cnoa_pnc/planning/proto/speed_finder.proto";
+import "modules/cnoa_pnc/planning/proto/optimizer.proto";
+// import "modules/cnoa_pnc/planning/proto/trajectory_point.proto";
+
+// The input messages' sequence numbers of next planning.iteration.
+message InputSeqNum {
+  optional uint64 pose = 1;
+  optional uint64 autonomy_state = 4;
+  optional uint64 traffic_light_states = 5;
+  optional uint64 driver_action = 6;
+  optional uint64 rerouting_request = 7;
+  optional uint64 remote_assist_to_car = 8;
+  optional uint64 recorded_route = 9;
+  optional uint64 chassis = 10;
+  optional uint64 prediction = 11;
+  optional uint64 localization_transform = 12;
+
+  // objects with scope type
+  optional uint64 real_objects = 13;
+  optional uint64 virtual_objects = 14;
+  optional uint64 av_objects = 15;
+
+  optional uint64 routing_result = 16;
+  optional uint64 prev_planner_debug = 17;
+
+  optional uint64 route_mgr_output = 18;
+  optional uint64 sensor_fovs = 19;
+  optional uint64 run_event_states = 20;
+
+  reserved 2, 3;
+}
+
+message TimeSeqNum {
+  optional uint64 ts_micros = 1;
+  optional uint64 seq_num = 2;
+}
+
+message TollHoldingState {
+  // optional CompositeLanePathProto.LaneIndexPointProto lane_index_point = 1;
+  // False for stopping, true for cleared.
+  optional bool cleared = 2;
+}
+
+message PosePoint {
+  optional Vec2dProto pos = 1;
+  optional double theta = 2;
+}
+
+message ObjectsTransform {
+  optional TimeSeqNum objects = 1;
+  optional TimeSeqNum localization_transform = 2;
+}
+
+message PredictionSeq {
+  optional TimeSeqNum pose = 1;
+  optional TimeSeqNum localization_transform = 2;
+  optional TimeSeqNum traffic_light_states = 3;
+  optional TimeSeqNum real_objects = 4;
+  optional TimeSeqNum virtual_objects = 5;
+  optional TimeSeqNum objects_prediction = 6;  // Filled after publish
+}
+
+message PredictionStateProto {
+  repeated TimeSeqNum av = 4;
+  repeated ObjectsTransform objects_transforms = 8;
+  optional Timestamp prediction_init_time = 6;
+  optional PredictionSeq prediction_seq = 7;
+
+  // Next id:9
+
+  reserved 1, 2, 3, 5;
+}
+
+message PlannerStateProto {
+  optional LiteHeader header = 1;
+
+  // The sequential number of the current planner frame. It starts at 0 upon
+  // planner module initialization and increments at each planning iteration.
+  // optional int32 planner_frame_seq_num = 2;
+
+  // Previous planned trajectory.
+  optional TrajectoryProto previous_trajectory = 3;
+
+  message ObjectIdList {
+    repeated string id = 1;
+  }
+
+  // repeated PosePoint previous_trajectory_global = 13;
+
+  // repeated PosePoint previous_past_trajectory_global = 14;
+
+  optional TrafficLightHistoryManagerProto tl_history_mgr = 15;
+
+  // optional Timestamp last_audio_alert_time = 16;
+
+  optional LaneChangeStateProto lane_change_state = 17;
+
+  // Record how many loops were skipped between this and previous trajectory.
+  // optional int32 planner_skip_counter = 19;
+
+  // The input sequence number of next iteration.
+  // optional InputSeqNum input_seq_num = 22;
+
+  optional AutonomyStateProto previous_autonomy_state = 23;
+
+  // optional int32 previous_trajectory_plan_counter = 27;
+
+  optional int32 version = 28;
+
+  // optional double last_door_override_time = 29;
+  optional InitializerStateProto initializer_state = 30;
+
+  optional LargeVehicleAvoidStateProto large_vehicle_avoid_state = 31;
+
+  // optional Timestamp parking_brake_release_time = 31;
+
+  optional mapping.LanePathProto prev_lane_path_before_lc = 48;
+  optional SpacetimePlannerObjectTrajectoriesProto st_planner_object_trajectories = 37;
+  optional DeciderStateProto decider_state = 38;
+
+  // optional FreespacePlannerStateProto freespace_planner_state = 39;
+
+  // optional int64 current_time = 40;  // mirco secs
+
+  // optional int64 route_update_id = 41;
+
+  // optional MissionStageProto mission_stage = 43;
+
+  // For Parallel planner.
+  optional mapping.LanePathProto prev_target_lane_path = 44;
+  optional double prev_length_along_route = 45;
+  optional double prev_max_reach_length = 57;
+  optional RouteSectionSequenceProto prev_route_sections = 46;
+  optional mapping.LanePointProto station_anchor = 51;
+
+  // Reference line smooth.
+  optional bool prev_smooth_state = 47;
+  optional SmoothedReferenceLineResultProto smooth_result_map = 54;
+
+  optional mapping.LanePathProto preferred_lane_path = 49;
+
+  // Yellow light observations.
+  map<string, YellowLightObservationProto> yellow_light_observations = 50;
+
+  // repeated PlanTaskProto plan_task_queue = 53;
+
+  optional SelectorStateProto selector_state = 59;
+
+  // optional bool stopped_at_route_end = 55;
+
+  optional TrajectoryEndInfoProto previous_trajectory_end_info = 56;
+
+  // ---------------- L2 ------------------
+  // optional AssistPlanStateProto assist_plan_state = 63;
+
+  // For Async Planner.
+  // optional AsyncPlannerStateProto async_planner_state = 60;
+
+  // AEB
+  // optional bool previously_triggered_aeb = 61;
+  // repeated PathPoint previous_st_path_global_including_past = 62;
+
+  // Online Map
+  // optional string prev_online_map_id = 65;
+
+  // Speed Plan
+  optional double spdlimit_curvature_gain_prev = 68;
+
+  optional SpeedFinderStateProto speed_finder_state = 69;
+
+  // Next ID: 70.
+  optional TrajectoryOptimizerStateProto selected_trajectory_optimizer_state = 67;
+  reserved 4 to 10, 11, 12, 18, 20, 21, 24, 25, 26, 32 to 36, 42, 52, 58, 64, 66;
+}

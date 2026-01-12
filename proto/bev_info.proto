@@ -1,0 +1,47 @@
+syntax = "proto3";
+
+import "modules/cnoa_pnc/planning/proto/common.proto";
+
+package ad_byd.planning.pb;
+
+message BEVObstacle {
+  double heading = 1;
+  string track_id = 2;
+  string type = 3;
+  Tensor motion_traj = 4;
+  Tensor past_traj = 5;
+  Tensor position = 6;
+  Tensor size = 7;
+  Tensor velocity = 8;
+}
+
+message SensorCalibration {
+  Tensor vcs_to_sensor_extrinsics = 1;  // 外参
+  Tensor intrinsic = 2;                 // 相机内参3*3 lidar此处不填
+  string dist_model = 3;                // equidistant or radtan
+  Tensor dist_param = 4;                // k1, k2, k3, k4, ..., p1, p2
+}
+
+message SensorData {
+  string sensor_name = 1;
+  double timestamp = 2;
+  string filepath = 3;
+  int32 height = 4;  //图像高度
+  int32 width = 5;   // 图像宽度
+  SensorCalibration sensor_calibration = 6;
+}
+
+message BEVFrame {
+  string frame_token = 1;
+  Tensor ego_pose = 2;
+  repeated SensorData cam_data = 3;
+  repeated SensorData lidar_data = 4;
+  repeated BEVObstacle bev_obstacles = 5;
+}
+
+message BEVInfo {
+  string clip_path = 1;
+  string frame_token = 2;
+  double history_time_delta = 3;
+  repeated BEVFrame history_bev_frame = 4;
+}

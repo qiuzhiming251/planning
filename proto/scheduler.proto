@@ -1,0 +1,36 @@
+syntax = "proto2";
+package st.planning;
+// option go_package = "st.proto.ai/onboard/planning.scheduler/proto/scheduler";
+
+import "modules/cnoa_pnc/planning/proto/lane_point.proto";
+import "modules/cnoa_pnc/planning/proto/lane_path.proto";
+import "modules/cnoa_pnc/planning/proto/affine_transformation.proto";
+import "modules/cnoa_pnc/planning/proto/lane_change.proto";
+
+message ScheduledPathBoundaryProto {
+  repeated Vec2dProto left_boundary = 1;
+  repeated Vec2dProto right_boundary = 2;
+  repeated Vec2dProto reference_center = 3;
+  repeated Vec2dProto target_left_boundary = 4;
+  repeated Vec2dProto target_right_boundary = 5;
+  repeated Vec2dProto opt_left_boundary = 6;
+  repeated Vec2dProto opt_right_boundary = 7;
+}
+
+message SchedulerOutputProto {
+  optional ScheduledPathBoundaryProto path_boundary = 3;
+  optional LaneChangeStateProto lc_state = 6;
+  optional mapping.LanePathProto target_lane_path = 7;
+  optional double length_along_route = 8;
+  optional bool borrow_lane = 9;
+  optional mapping.LanePathProto lane_path_before_lc = 10;
+  optional double max_reach_length = 11;
+  optional bool should_smooth = 12;
+  optional mapping.LanePathProto backward_extended_lane_path = 13;
+  optional mapping.LanePointProto anchor_point = 14;
+  optional bool request_help_lane_change_by_route = 16;
+  optional double standard_congestion_factor = 17;
+  optional double traffic_congestion_factor = 18;
+
+  reserved 1, 2, 4, 5, 15;
+}

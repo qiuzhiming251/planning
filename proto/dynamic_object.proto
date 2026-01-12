@@ -1,0 +1,78 @@
+syntax = "proto3";
+
+import "modules/cnoa_pnc/planning/proto/common.proto";
+package ad_byd.planning.pb;
+
+message LaneFeature {
+  string lane_id = 1;
+  double s = 2;
+  double l = 3;
+  double angle_diff = 4;
+  double lane_heading = 5;
+  int32 nearby_type = 6;
+  int32 lane_relation = 7;  // same with on line ObstacleLaneRelation
+  int32 lane_type = 8;
+}
+
+message JunctionFeature {
+  string id = 1;
+  double entry_heading = 2;
+  double distance = 3;
+  LaneFeature entry_lane = 4;
+  repeated LaneFeature exit_lane = 5;
+  bool entry_heading_converged = 6;
+  bool is_roundabout = 7;
+}
+
+message NearbyObstacle {
+  string obs_id = 1;
+  double s = 2;
+  double l = 3;
+}
+
+message LaneSequence {
+  int32 seq_id = 1;
+  repeated string lane_ids = 2;
+  repeated NearbyObstacle nearby_obstacle = 3;
+  int32 action = 4;
+  int32 turn_type = 5;
+}
+
+message LaneGraph {
+  repeated LaneSequence lane_sequences = 1;
+  repeated LaneSequence backward_lane_sequence = 2;
+}
+
+message DynamicObject {
+  string id = 1;
+  int64 seq_num = 2;
+  double timestamp = 3;
+  Vec2d position = 4;
+  double heading = 6;
+  int32 type = 7;
+  Vec2d velocity = 8;
+  double speed = 9;
+  Vec2d vec_acc = 10;
+  double acc = 11;
+  double length = 12;
+  double width = 13;
+  double height = 14;
+  repeated Vec2d polygon = 15;
+  double steer_angle = 16;
+  int32 obs_state = 17;
+  int32 fusion_type = 18;
+  int32 velocity_converged = 19;
+
+  LaneFeature lane_feature = 20;
+  repeated LaneFeature current_lanes = 21;
+  repeated LaneFeature nearby_lanes = 22;
+  LaneGraph lane_graph = 23;
+  LaneFeature left_front_lane_feature = 24;
+  repeated LaneFeature left_front_lanes = 25;
+  LaneFeature right_front_lane_feature = 26;
+  repeated LaneFeature right_front_lanes = 27;
+  repeated JunctionFeature junction_feature = 28;
+  bool is_interpolation = 29;
+  int32 obs_static_scene = 30;
+  repeated int32 obstacle_lights = 31;
+}

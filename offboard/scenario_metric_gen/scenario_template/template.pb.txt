@@ -1,0 +1,37 @@
+name: "scenario_name"
+uid: uid_input
+data_config{
+    record_path: "cyber_record_path_input"
+    start_timestamp: time_to_start_play_record
+    eval_time_offset: offset_seconds_to_begin_evalate
+    duration: duration_input_seconds
+}
+
+
+metric_eval_configs {
+    metric_id: "change_lane_type_eval"
+    if_needed: true
+    change_lane_type_eval_config {
+        timestamp_begin_to_eval: expect_timestamp_seconds
+        duration: expect_seconds
+        target_type: lane_change_type
+    }
+}
+
+
+
+metric_eval_configs {
+    metric_id: "change_lane_intersection_eval"
+    if_needed: true
+    change_lane_intersection_eval_config {
+    }
+}
+
+
+
+metric_eval_configs {
+    metric_id: "change_lane_backandforth_eval"
+    if_needed: true
+    change_lane_backandforth_eval_config {
+    }
+}

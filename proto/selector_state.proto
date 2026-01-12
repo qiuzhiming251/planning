@@ -1,0 +1,150 @@
+syntax = "proto2";
+
+package st.planning;
+
+// option go_package = "st.proto.ai/onboard/planning.selector/proto/selector_state";
+
+import "modules/cnoa_pnc/planning/proto/turn_signal.proto";
+import "modules/cnoa_pnc/planning/proto/timestamp.proto";
+import "modules/cnoa_pnc/planning/proto/lane_change_type.proto";
+import "modules/cnoa_pnc/planning/proto/affine_transformation.proto";
+import "modules/cnoa_pnc/planning/proto/lane_change.proto";
+
+enum LaneChangeReason {
+  NO_CHANGE = 0;
+  PROGRESS_CHANGE = 1;
+  ROUTE_CHANGE = 2;
+  DEFAULT_CHANGE = 3;
+  MANUAL_CHANGE = 4;
+  CENTER_CHANGE = 5;
+  MERGE_CHANGE = 6;
+  AVOID_ROADWORK_CHANGE = 7;
+  AVOID_STATIC_OBJECT = 8;
+  AVOID_VEHICLE_CHANGE = 9;
+  LCC_ROUTE_CHANGE = 10;
+  AVOID_LANE_BUS = 11;
+  AVOID_MERGE_AREA = 12;
+}
+
+enum LaneChangeCancelReason {
+  NOT_CANCEL = 0;
+  CANCEL_LC_EMERGENCY = 1;
+  CANCEL_LC_STALLED_OBJ = 2;
+  CANCEL_LC_INVADE_RISK = 3;
+  CANCEL_LC_OBVIOUS_ROUTE = 4;
+  CANCEL_LC_CURB_CUTOFF = 5;
+}
+
+message PrefilterStateProto {
+  optional bool choose_left_branch = 1;
+}
+enum LaneChangePrepareState {
+  Lane_Keeping = 0;
+  Lane_PrepareLeft = 1;
+  Lane_PrepareRight = 2;
+}
+
+enum LcFeasibility {
+  FEASIBILITY_OK = 0;
+  FEASIBILITY_NO_LANE = 1;
+  FEASIBILITY_CURVATURE = 2;
+  FEASIBILITY_LINE_TYPE = 3;
+  FEASIBILITY_OBS_CURRENT_FRONT = 4;
+  FEASIBILITY_OBS_TARGET_FRONT = 5;
+  FEASIBILITY_OBS_TARGET_BACK = 6;
+  FEASIBILITY_MERGE_LANE = 7;
+  FEASIBILITY_CONES = 8;
+  FEASIBILITY_LANE_NONPARALLEL = 9;
+  FEASIBILITY_GENERAL = 10;
+  FEASIBILITY_OPPOSITE = 11;
+  FEASIBILITY_IN_TUNNEL = 12;
+  FEASIBILITY_ROUTE_INTENT = 13;
+  FEASIBILITY_OBVIOUSE_ROUTE = 14;
+  FEASIBILITY_OBS_INVADE_RISK = 15;
+  FEASIBILITY_CUTOFF_TOO_CLOSE = 16;
+  FEASIBILITY_AVOID_OVERTAKE_IF_ACCEL = 17;
+}
+
+enum LaneChangeState {
+  Lc_Keeping = 0;
+  Lc_PrepareLeft = 1;
+  Lc_PrepareRight = 2;
+  Lc_ChangeLeft = 3;
+  Lc_ChangeRight = 4;
+  Lc_ChangeCancel = 5;
+  Lc_KeepingInit = 6;
+  Lc_ChangeInvalid = -1;
+}
+
+enum RequestState {
+  NO_REQUEST = 0;
+  WAITING_RESPONSE = 1;
+  RECEIVED_RESPONSE = 2;
+}
+
+enum RouteTtcConfig {
+  CONSERVATIVE = 0;
+  RADICAL = 1;
+}
+
+message RouteTtcSettingProto {
+  optional RequestState request_state = 1;
+  optional RouteTtcConfig request_config = 2;
+  optional RouteTtcConfig response_config = 3;
+  optional uint64 prepare_request_frame = 4;
+}
+
+message LastLcInfoProto {
+  optional bool lc_left = 1;
+  optional Timestamp lane_change_time = 2;
+  optional LaneChangeType lane_change_type = 3;
+  optional LaneChangeStage lane_change_stage = 4;
+}
+
+message LastPassedSplitInfoProto {
+  optional bool lc_left = 1;
+  optional Timestamp passed_split_time = 2;
+  optional LaneChangeType lane_change_type = 3;
+  optional bool is_valid_avoid_split_dis = 4;
+}
+
+message TargetLaneStateProto {
+  optional bool is_borrow = 1;
+  optional bool is_fallback = 2;
+  repeated uint64 lane_ids = 3;
+  repeated Vec2dProto center_points = 4;
+  optional uint64 successive_count = 5;
+}
+
+message SelectorLaneChangeRequestProto {
+  optional LaneChangeReason lane_change_reason = 1;
+  optional bool lc_left = 2;
+}
+
+message SelectorStateProto {
+  repeated TargetLaneStateProto history_best_target_lane_states = 1;
+  optional TargetLaneStateProto selected_target_lane_state = 2;
+  optional TurnSignal pre_turn_signal = 3;
+  optional Timestamp last_redlight_stop_time = 4;
+  optional LaneChangeReason lane_change_reason = 5;
+  optional LastLcInfoProto last_lc_info = 6;
+  optional SelectorLaneChangeRequestProto selector_lane_change_request = 7;
+  optional Timestamp last_user_reject_alc_time = 8;
+  optional LaneChangeReason last_user_reject_alc_reason = 9;
+  optional LaneChangePrepareState lane_change_prepare_state = 10;
+  optional LcFeasibility lc_unable_reason = 11;
+  optional LaneChangeReason last_lane_change_reason = 12;
+  optional LaneChangeState pre_lane_change_state = 13;
+  optional RouteTtcSettingProto route_ttc_setting = 14;
+  optional Timestamp activate_selector_time = 15;
+  optional Timestamp start_lane_change_time = 16;
+  optional Timestamp give_up_lane_change_time = 17;
+  optional LaneChangeType lane_change_type = 18;
+  optional LaneChangeType last_user_reject_alc_type = 19;
+  optional LaneChangeGeneralType lane_change_general_type = 20;
+  optional PrefilterStateProto prefilter_state = 21;
+  optional TargetLaneStateProto best_target_lane_state = 22;
+  optional TurnSignal last_turn_signal = 23;
+  optional TurnSignalReason last_turn_signal_reason = 24;
+  optional LastPassedSplitInfoProto last_passed_split_info = 25;
+}

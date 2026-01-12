@@ -1,0 +1,38 @@
+syntax = "proto2";
+
+package st.planning;
+// option go_package = "st.proto.ai/onboard/planning.selector/proto/lane_change_type";
+
+// import "modules/cnoa_pnc/planning/proto/turn_signal.proto";
+// import "modules/cnoa_pnc/planning/proto/timestamp.proto";
+enum LaneChangeType {
+  TYPE_NO_CHANGE = 0;
+  TYPE_DEFAULT_CHANGE = 1;
+  TYPE_OVERTAKE_CHANGE = 2;
+  TYPE_STALLED_VEHICLE_CHANGE = 3;
+  TYPE_OBSTACLE_CHANGE = 4;
+  TYPE_CONSTRUCTION_ZONE_CHANGE = 5;
+  TYPE_ROAD_SPEED_LIMIT_CHANGE = 6;
+  TYPE_MAINROAD_EXIT_CHANGE = 7;
+  TYPE_ENTER_MAINROAD_CHANGE = 8;
+  TYPE_DEFAULT_ROUTE_CHANGE = 9;
+  TYPE_MERGE_CHANGE = 10;
+  TYPE_CENTER_CHANGE = 11;
+  TYPE_EMERGENCY_CHANGE = 12;
+  TYPE_PADDLE_CHANGE = 13;
+  TYPE_INTERSECTION_OBS = 14;
+  TYPE_AVOID_CONES = 15;
+  TYPE_CURB_CUTOFF_CHANGE = 16;
+  TYPE_AVOID_BUS_LANE = 17;
+  TYPE_AVOID_MERGE_AREA = 18;
+}
+
+enum LaneChangeGeneralType {
+  LCGT_NO_CHANGE = 0;
+  LCGT_DEFAULT_CHANGE = 1;
+  LCGT_OVERTAKE_CHANGE = 2;
+  LCGT_ROUTE_CHANGE = 3;
+  LCGT_EMERGENCY_CHANGE = 4;
+  LCGT_PADDLE_CHANGE = 5;
+  LCGT_AVOID_MERGE_AREA_CHANGE = 6;
+}

@@ -1,0 +1,88 @@
+syntax = "proto2";
+
+package st;
+
+message Vec2iProto {
+  optional int32 x = 1;
+  optional int32 y = 2;
+}
+
+message Vec2dProto {
+  optional double x = 1;
+  optional double y = 2;
+}
+
+message Vec3iProto {
+  optional int32 x = 1;
+  optional int32 y = 2;
+  optional int32 z = 3;
+}
+
+message Vec3dProto {
+  optional double x = 1;
+  optional double y = 2;
+  optional double z = 3;
+}
+
+message Vec4dProto {
+  optional double x = 1;
+  optional double y = 2;
+  optional double z = 3;
+  optional double w = 4;
+}
+
+message Mat2dProto {
+  // Length of m must be 4.
+  repeated double m = 1;
+}
+
+message Mat3dProto {
+  // Length of m must be 9.
+  repeated double m = 1;
+}
+
+message Mat4dProto {
+  // Length of m must be 16.
+  repeated double m = 1;
+}
+
+message TranslationProto {
+  optional double x = 1;
+  optional double y = 2;
+  optional double z = 3;
+}
+
+message RotationProto {
+  // Angle-axis representation, convenient for manual editing.
+  optional double angle = 1;  // Degrees, not radians (OpenGL's convention).
+  optional double ax = 2;     // The axis does not have to be normalized.
+  optional double ay = 3;
+  optional double az = 4;
+}
+
+message ScalingProto {
+  optional double sx = 1;
+  optional double sy = 2;
+  optional double sz = 3;
+}
+
+message RigidTransformationProto {
+  optional TranslationProto translation = 1;
+  optional RotationProto rotation = 2;
+}
+
+message AffineTransformationProto {
+  // Should have 16 elements: a column-major 4x4 matrix.
+  repeated double m = 1;
+}
+
+message AffineTransformationSequenceProto {
+  message Operation {
+    oneof operation {
+      TranslationProto translation = 1;
+      RotationProto rotation = 2;
+      ScalingProto scaling = 3;
+    }
+  }
+  repeated Operation operations = 1;
+}

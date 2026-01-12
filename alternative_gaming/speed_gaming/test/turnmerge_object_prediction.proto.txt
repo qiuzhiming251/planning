@@ -1,0 +1,186 @@
+id: "3"
+trajectories{
+    probability: 0.5
+    points{
+        pos{
+            x: 0.0
+            y: 13.0
+        }
+        s: 0.0
+        theta: 0.0
+        kappa: 0.0
+        t: 0.0
+        v: 10.0
+        a: 0.0
+    }
+    points{
+        pos{
+            x: 2.0
+            y: 13.0
+        }
+        s: 2.0
+        theta: 0.0
+        kappa: 0.0
+        t: 0.2
+        v: 10.0
+        a: 0.0
+    }
+    points{
+        pos{
+            x: 4.0
+            y: 13.0
+        }
+        s: 4.0
+        theta: 0.0
+        kappa: 0.0
+        t: 0.4
+        v: 10.0
+        a: 0.0
+    }
+    points{
+        pos{
+            x: 6.0 
+            y: 13.0
+        }
+        s: 6.0
+        theta: 0.0
+        kappa: 0.0
+        t: 0.6
+        v: 10.0
+        a: 0.0
+    }
+    points{
+        pos{
+            x: 8.0 
+            y: 13.0
+        }
+        s: 8.0
+        theta: 0.0
+        kappa: 0.0
+        t: 0.8
+        v: 10.0
+        a: 0.0
+    }
+    points{
+        pos{
+            x: 10.0 
+            y: 13.0
+        }
+        s: 10.0
+        theta: 0.0
+        kappa: 0.0
+        t: 1.0
+        v: 10.0
+        a: 0.0
+    }
+    points{
+        pos{
+            x: 12.0
+            y: 13.0
+        }
+        s: 12.0
+        theta: 0.0
+        kappa: 0.0
+        t: 1.2
+        v: 10.0
+        a: 0.0
+    }
+    points{
+        pos{
+            x: 14 
+            y: 13.0
+        }
+        s: 14.0
+        theta: 0.0
+        kappa: 0.0
+        t: 1.4
+        v: 10.0
+        a: 0.0
+    }
+    points{
+        pos{
+            x: 16.0 
+            y: 13.0
+        }
+        s: 16.0
+        theta: 0.0
+        kappa: 0.0
+        t: 1.6
+        v: 10.0
+        a: 0.0
+    }
+    points{
+        pos{
+            x: 18.0 
+            y: 13.0
+        }
+        s: 18.0
+        theta: 0.0
+        kappa: 0.0
+        t: 1.8
+        v: 10.0
+        a: 0.0
+    }
+    points{
+        pos{
+            x: 20.0 
+            y: 13.0
+        }
+        s: 20.0
+        theta: 0.0
+        kappa: 0.0
+        t: 2.0
+        v: 10.0
+        a: 0.0
+    }
+    type: PT_VEHICLE_LANE_FOLLOW
+    index: 1
+    is_reversed: false
+    intention: INTENTION_CROSS
+}
+perception_object{
+    id: "3"
+    type: OT_VEHICLE
+    pos{
+        x: 0.0
+        y: 13.0
+    }
+    yaw: 0.0
+    yaw_rate: 0.0
+    vel{
+        x: 10.0
+        y: 0.0
+    }
+    accel{
+        x: 0.0
+        y: 0.0
+    }
+    contour{
+        x: 2.5
+        y: 14.0
+    }
+    contour{
+        x: -2.5
+        y: 14.0
+    }
+    contour{
+        x: -2.5
+        y: 12.0
+    }
+    contour{
+        x: 2.5
+        y: 12.0
+    }
+    timestamp: 0.0
+    bounding_box{
+        x: 0.0
+        y: 13.0
+        heading: 0.0
+        width: 2.0
+        length: 5.0
+    }
+}
+stop_time{
+}
+long_term_behavior{
+}

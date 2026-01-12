@@ -1,0 +1,8 @@
+syntax = "proto2";
+
+package st;
+
+message GlogParamsProto {
+  optional int64 v = 1;
+  optional string vmodule = 2;
+}

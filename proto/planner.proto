@@ -1,0 +1,96 @@
+syntax = "proto2";
+
+package st;
+
+import "modules/cnoa_pnc/planning/proto/lite_common.proto";
+
+import "modules/cnoa_pnc/planning/proto/trajectory_point.proto";
+import "modules/cnoa_pnc/planning/proto/prediction.proto";
+import "modules/cnoa_pnc/planning/proto/turn_signal.proto";
+import "modules/cnoa_pnc/planning/proto/affine_transformation.proto";
+
+import "modules/cnoa_pnc/planning/proto/traffic_light_info.proto";
+import "modules/cnoa_pnc/planning/proto/planner_status.proto";
+import "modules/cnoa_pnc/planning/proto/est_planner_debug.proto";
+import "modules/cnoa_pnc/planning/proto/selector_debug.proto";
+import "modules/cnoa_pnc/planning/proto/scene_understanding.proto";
+
+enum PlannerType {
+  PREV_TRAJ_PLANNER = 4;
+  AEB_PLANNER = 6;
+  EST_PLANNER = 7;
+  FREESPACE_PLANNER = 8;
+  FALLBACK_PLANNER = 9;
+
+  reserved 1, 2, 3, 5;
+}
+
+// message MissionStageProto {
+//  enum MissionStage {
+//    ON_ROAD = 1;
+//    OFF_ROAD_DEPART = 2;
+//    OFF_ROAD_STOP = 3;
+//  }
+//  optional MissionStage stage = 1 [default = ON_ROAD];
+//}
+
+message ResetReasonProto {
+  enum Reason {
+    NONE = 0;
+    PREV_PLAN_POINT_NOT_FOUND = 1;
+    PREV_NOW_POINT_NOT_FOUND = 2;
+    LON_ERROR_TOO_LARGE = 3;
+    LAT_ERROR_TOO_LARGE = 4;
+    REROUTED = 5;
+    NON_AUTONOMY = 6;
+    FIRST_ENGAGE = 7;
+    FULL_STOP = 8;
+    RECOVER_FROM_AEB = 9;
+    NEW_FREESPACE_PATH = 10;
+    STEER_ONLY_ENGAGE = 11;
+    STEER_ONLY = 12;
+    SPEED_ONLY = 13;
+    SPEED_ONLY_ENGAGE = 14;
+  }
+}
+
+message PlannerDebugProto {
+  optional LiteHeader header = 1;
+
+  optional PlannerType active_planner = 24;
+  optional planning.PlannerStatusProto planner_status = 41;
+
+  repeated Vec2dProto aeb_detection_polygon = 31;
+
+  optional bool reset = 23;
+  optional ResetReasonProto.Reason reset_reason = 55;
+
+  optional TurnSignalReason turn_signal_reason_enum = 43;
+
+  message ObjectInfo {
+    optional string id = 1;
+    optional Vec2dProto pos = 2;
+    optional double heading = 3;
+  }
+  repeated ObjectInfo stalled_objects = 37;
+  repeated ObjectInfo traffic_waiting_objects = 49;
+
+  optional planning.TrafficLightInfoProto selected_traffic_light_info = 36;
+  repeated planning.TrafficLightInfoProto candidate_traffic_light_info = 50;
+
+  optional planning.PlannerStatusProto est_planner_status = 57;
+  repeated planning.EstPlannerDebugProto est_planner_debugs = 44;
+  optional planning.EstPlannerDebugProto async_high_freq_debug = 59;
+  optional planning.SelectorDebugProto selector_debug = 45;
+
+  optional planning.SceneOutputProto scene_understanding_debug = 48;
+
+  optional ObjectsPredictionProto speed_considered_objects_prediction = 51;
+
+  optional int32 planner_frame_seq_num = 52;  // Used to match the state.
+  optional int32 path_start_relative_index = 54;
+
+  optional double planning_horizon = 60;
+
+  repeated PathPoint st_path_points_global_including_past = 63;
+}

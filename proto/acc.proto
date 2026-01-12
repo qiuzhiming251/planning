@@ -1,0 +1,15 @@
+syntax = "proto2";
+
+package st;
+
+enum AccState {
+  ACC_OFF = 1;
+  ACC_ON = 2;
+  ACC_STANDBY = 3;
+}
+
+enum AccPathCorridorType {
+  MAP = 1;
+  NO_MAP = 2;
+  CONCAT = 3;
+}

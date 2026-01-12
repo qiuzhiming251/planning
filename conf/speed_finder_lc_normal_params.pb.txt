@@ -1,0 +1,3 @@
+speed_limit_params { 
+  curvature_lanechange_gain: 1.25
+}

@@ -1,0 +1,96 @@
+syntax = "proto2";
+
+package st.planning;
+// option go_package = "st.proto.ai/onboard/planning.selector/proto/selector_params";
+
+message SelectorParamsProto {
+  message TrajCostWeights {
+    // Weights for different cost features.
+    message ProgressCost {
+      optional double progress = 1;
+      optional double follow_slow = 2;
+      optional double large_slow_working_obj = 3;
+      optional double junction_object = 4;
+    }
+    message MaxJerkCost {
+      optional double max_lon_jerk = 1;
+      optional double max_lat_jerk = 2;
+      optional double max_lon_deacc = 3;
+      optional double lat_away_distance = 4;
+      optional double split_angle = 5;
+    }
+    message LaneChangeCost {
+      optional double lane_path_diff = 1;
+      optional double pose_to_target = 2;
+      optional double prev_lat_diff = 3;
+      optional double lc_in_curvy_road = 5;
+      optional double lc_in_intersection = 6;
+      optional double lc_in_redlight = 8;
+      optional double lc_opposite_direction = 9;
+      optional double lc_safety_effect = 10;
+      optional double lk_after_turn_signal = 11;
+      optional double junction_smoothness = 12;
+      optional double passed_split_lc_opposite_direction = 13;
+      optional double lc_invade_risk = 14;
+      optional double lc_to_bus_lane = 15;
+      reserved 4, 7;
+    }
+    message CrossSolidBoundaryCost {
+      optional double solid_white = 1;
+      optional double solid_yellow = 2;
+      optional double solid_double_yellow = 3;
+      optional double curb = 4;
+    }
+    message RouteLookAheadCost {
+      optional double length_along_route = 1;
+      optional double reach_destination = 2;
+      optional double preview_beyond_horizon = 3;
+      optional double discourage_right_most_lane = 4;
+      optional double behind_stalled_object = 5;
+      optional double merge_lane = 6;
+      optional double encourage_right_most_lane = 7;
+      optional double neighbor_cones = 8;
+      optional double bus_lane = 9;
+      optional double merged_area = 10;
+    }
+    message BoundaryExpansionCost {
+      optional double boundary_expansion = 1;
+    }
+    message PrepareIntentionCost {
+      optional double cost_decay = 1;
+    }
+    message DefensiveDrivingCost {
+      optional double lc_truckbehind = 1;
+    }
+
+    optional ProgressCost progress = 1;
+    optional MaxJerkCost max_jerk = 2;
+    optional LaneChangeCost lane_change = 3;
+    optional CrossSolidBoundaryCost cross_solid_boundary = 4;
+    optional RouteLookAheadCost route_look_ahead = 6;
+    optional BoundaryExpansionCost boundary_expansion = 7;
+    optional PrepareIntentionCost prepare_intention = 8;
+    optional DefensiveDrivingCost defensive_driving = 9;
+    reserved 5;
+  }
+  message TrajCostConfig {
+    optional bool enable_progress_cost = 1;
+    optional bool enable_max_jerk_cost = 2;
+    optional bool enable_lane_change_cost = 3;
+    optional bool enable_solid_boundary_cost = 4;
+    optional bool enable_route_look_ahead_cost = 6;
+    optional bool enable_boundary_expansion_cost = 7;
+    optional bool enable_prepare_intention_cost = 8;
+    optional bool enable_defensive_driving_cost = 9;
+    reserved 5;
+  }
+  message SelectorModelUsageConfig {
+    optional bool enable_selector_model = 1;
+    optional double selector_score_cost = 2 [default = 0.0];
+    optional bool selector_score_only = 3;
+  }
+
+  optional TrajCostWeights cost_weights = 1;
+  optional TrajCostConfig cost_config = 2;
+  optional SelectorModelUsageConfig selector_model_config = 3;
+}

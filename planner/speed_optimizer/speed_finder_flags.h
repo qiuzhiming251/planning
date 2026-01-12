@@ -1,0 +1,24 @@
+
+
+#ifndef ONBOARD_PLANNER_SPEED_SPEED_FINDER_FLAGS_H_
+#define ONBOARD_PLANNER_SPEED_SPEED_FINDER_FLAGS_H_
+
+#include "gflags/gflags.h"
+
+DECLARE_bool(planner_print_speed_finder_time_stats);
+DECLARE_bool(planner_send_speed_optimizer_debug);
+DECLARE_bool(planner_enable_mapping_close_traj);
+DECLARE_bool(planner_enable_moving_close_traj_speed_limit);
+DECLARE_bool(planner_enable_near_parallel_vehicle_speed_limit);
+DECLARE_bool(planner_enable_right_turn_close_speed_limit);
+DECLARE_bool(planner_enable_cross_blind_close_decider);
+DECLARE_bool(planner_enable_curvature_speed_limit_level);
+DECLARE_bool(planner_enable_small_angle_cutin_protective);
+DECLARE_bool(planner_ignore_curb_out_of_real_range);
+DECLARE_bool(planner_enable_static_object_close_speed_limit);
+DECLARE_bool(planner_enable_acc_curvature_speed_limit);
+DECLARE_bool(planner_enable_acc_pre_st_boundary_modifier);
+DECLARE_bool(planner_enable_dense_traffic_flow_stop_line);
+DECLARE_bool(planner_use_hybrid_dijkstra_to_search_dp_speed);
+
+#endif  // ONBOARD_PLANNER_SPEED_SPEED_FINDER_FLAGS_H_

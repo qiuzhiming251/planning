@@ -1,0 +1,97 @@
+syntax = "proto3";
+
+import "modules/cnoa_pnc/planning/proto/common.proto";
+package ad_byd.planning.pb;
+
+enum PolylineType {
+  UNSET = 0;
+  LANE = 1;
+  LANE_BOUNDARY = 2;
+  ROAD_BOUNDARY = 3;
+  POLYGON = 4;
+  JUNCTION = 5;
+  SPEED_BUMP = 6;
+  CROSS_WALK = 7;
+  STOP_LINE = 8;
+  OCCULUSION = 9;
+  OBSTACLE = 10;
+}
+
+message VecPoint {
+  repeated Vec2d points = 1;
+}
+
+message Segment {
+  string segment_id = 1;
+  repeated string predecessor = 2;
+  repeated string successor = 3;
+  repeated string left_neighbor = 4;
+  repeated string right_neighbor = 5;
+  int32 vector_start_idx = 6;
+  int32 vector_end_idx = 7;
+}
+
+message LanePolyLine {
+  string id = 1;
+  repeated LaneVector vector = 2;     // ~1.5m
+  repeated Segment segment_info = 3;  // this polyline concat of many lanes
+  repeated string successor = 4;      // polyline relation
+  repeated string predecessor = 5;
+  repeated string left_neighbor = 6;
+  repeated string right_neighbor = 7;
+  double total_length = 8;  // polyline length (sum of vectors) ~20m
+  repeated int32 next_turn_type = 9;
+}
+
+message PolygonPolyLine {
+  string id = 1;
+  PolylineType polyline_type = 2;
+  repeated PolygonVector vector = 3;
+}
+
+message BoundaryPolyLine {
+  string id = 1;
+  PolylineType polyline_type = 2;
+  repeated BoundaryVector vector = 3;
+  repeated Segment segment_info = 4;
+}
+
+message LaneVector {
+  VecPoint vec = 1;
+  int32 type = 2;
+  double heading = 3;
+  bool is_virtual = 4;
+  int32 light_status = 5;
+  double speed_limit = 6;
+  bool is_end_of_stop_line = 7;
+  int32 turn_type = 8;
+  bool is_navi_lane = 9;
+  int32 merge_type = 10;
+  int32 split_type = 11;
+}
+
+message BoundaryVector {
+  VecPoint vec = 1;
+  int32 type = 2;
+  double heading = 3;
+  int32 color = 4;
+}
+
+message PolygonVector {
+  VecPoint vec = 1;
+  int32 type = 2;
+  double heading = 3;
+}
+
+message PolylineIds {
+  repeated string polyline_id = 1;
+}
+
+message VectorMap {
+  double timestamp = 1;
+  repeated LanePolyLine lanes = 2;
+  repeated BoundaryPolyLine boundaries = 3;
+  repeated PolygonPolyLine polygons = 4;
+  map<string, PolylineIds> lane_id_polyline_map = 5;
+  map<string, PolylineIds> lane_bound_id_polyline_map = 6;
+}

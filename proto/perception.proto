@@ -1,0 +1,230 @@
+syntax = "proto2";
+
+package st;
+
+import "modules/cnoa_pnc/planning/proto/aabox.proto";
+import "modules/cnoa_pnc/planning/proto/affine_transformation.proto";
+import "modules/cnoa_pnc/planning/proto/box2d.proto";
+import "modules/cnoa_pnc/planning/proto/lite_common.proto";
+
+// NEXT ID: 16
+enum ObjectType {
+  OT_UNKNOWN_STATIC = 0;
+  OT_VEHICLE = 1;
+  OT_MOTORCYCLIST = 2;
+  OT_PEDESTRIAN = 3;
+  OT_CYCLIST = 4;
+  OT_FOD = 5;
+  OT_UNKNOWN_MOVABLE = 6;
+  OT_VEGETATION = 7;
+  OT_BARRIER = 8;
+  OT_CONE = 10;
+  OT_WARNING_TRIANGLE = 13;
+  OT_TRICYCLIST = 14;
+  OT_LARGE_VEHICLE = 15;
+  OT_ROW_OBSTACLES = 16;
+  // Reserve OT_ROAD, OT_MIST, OT_BIRD respectively.
+  // Use old-fashioned reserved to avoid warning.
+  reserved 9, 11, 12;
+}
+
+enum ObservationState {
+  OS_UNKNOWN = 0;
+  OS_PARTIALLY_OBSERVED = 1;
+  OS_PARTIALLY_OCCLUDED = 2;
+}
+
+enum OlaType {                     //压线类型
+  OLA_UNKNOWN = 0;                 // 未知
+  OLA_NO_OCCUPANCY = 1;            // 不压线
+  OLA_RIGHT_SLIGHT_OCCUPANCY = 2;  // 右侧轻微压线
+  OLA_LEFT_SLIGHT_OCCUPANCY = 3;   // 左侧轻微压线
+  OLA_SEVERE_OCCUPANCY = 4;        // 严重压线
+}
+
+enum LaneAttrType {      //车道归属
+  LANEATTR_UNKNOWN = 0;  // 未知
+  LANEATTR_SELF = 1;     // 自车道
+  LANEATTR_LEFT = 2;     // 左车道
+  LANEATTR_RIGHT = 3;    // 右车道
+  LANEATTR_ON_LINE = 4;  // 在车道线上
+  LANEATTR_OTHER = 5;    // 其他
+}
+
+message VisionAttribute {
+  // 压线类型
+  optional OlaType ola_type = 1 [default = OLA_UNKNOWN];
+  // 压线类别置信度
+  optional float ola_conf = 2 [default = 0.0];
+  //静态障碍物车道归属
+  optional LaneAttrType lane_attr_type = 3 [default = LANEATTR_UNKNOWN];
+  //静态障碍物车道归属置信度
+  optional float lane_attr_conf = 4 [default = 0.0];
+}
+
+enum FusionSource {
+  NONE_FUSION = 0;
+  VISION_FUSION = 1;
+  RADAR_FUSION = 2;
+  RADAR_VISION_FUSION = 3;
+  LIDAR_FUSION = 4;
+  LIDAR_VISION_FUSION = 5;
+  RADAR_LIDAR_FUSION = 6;
+  RADAR_LIDAR_VISION_FUSION = 7;
+}
+
+message ObjectProto {
+  optional string id = 9;
+  optional ObjectType type = 1;
+  optional Vec2dProto pos = 2;    // Smooth frame position.
+  optional double yaw = 10;       // Facing orientation.
+  optional double yaw_rate = 11;  // dyaw/dt.
+  optional Vec2dProto vel = 5;    // dpos/dt.
+  optional Vec2dProto accel = 6;  // dvel/dt.
+  repeated Vec2dProto contour = 7;
+  optional double timestamp = 8;
+
+  optional Box2dProto bounding_box = 12;
+  optional bool parked = 14;  // Indicate if this is a parked vehicle.
+
+  optional double min_z = 20;
+  optional double max_z = 21;
+
+  optional ObservationState observation_state = 27;
+  optional double ground_z = 29;
+  optional ObstacleLight obstacle_light = 30;
+  // 视觉目标属性
+  optional VisionAttribute vision_attribute = 31;
+  optional FusionSource fusion_source = 32;
+  optional ObjectSubType subtype = 33;
+  optional bool is_frame_dropped = 34;
+  reserved 3, 4, 17;
+}
+
+message ObstacleLight {
+  optional ObstacleLightType left_turn_lights = 1;   // 0=unknown 1=off 2=on
+  optional ObstacleLightType right_turn_lights = 2;  // 0=unknown 1=off 2=on
+  optional ObstacleLightType brake_lights = 3;       // 0=unknown 1=off 2=on
+  optional ObstacleLightType hazard_lights = 4;      // 0=unknown 1=off 2=on
+
+  optional double left_turn_lights_conf = 5;
+  optional double right_turn_lights_conf = 6;
+  optional double brake_lights_conf = 7;
+  optional double hazard_lights_conf = 8;
+}
+
+enum ObstacleLightType {
+  LIGHT_UNKNOWN = 0;
+  LIGHT_OFF = 1;
+  LIGHT_ON = 2;
+}
+
+message ObjectsProto {
+  optional LiteHeader header = 1;
+
+  enum Scope {
+    SCOPE_REAL = 0;
+    SCOPE_VIRTUAL = 1;
+    SCOPE_AV = 2;
+  };
+  optional Scope scope = 2;
+  repeated ObjectProto objects = 3;
+}
+
+enum TrafficLightColor {
+  TL_UNKNOWN = 0;
+  TL_RED = 1;
+  TL_YELLOW = 2;
+  TL_GREEN = 3;
+}
+
+enum TrafficLightCountDown {
+  TL_COUNTDOWN_UNKNOWN = 0;
+  TL_ONE = 1;
+  TL_TWO = 2;
+  TL_THREE = 3;
+  TL_FOUR = 4;
+  TL_FIVE = 5;
+  TL_SIX = 6;
+  TL_SEVEN = 7;
+  TL_EIGHT = 8;
+  TL_NINE = 9;
+  TL_GREATERTHANNINE = 10;
+  TL_COUNTDOWN_COUNT = 11;
+}
+
+enum TrafficLightStateSourceProto {
+  TL_SS_OBSERVATION = 0;
+  TL_SS_DETERMINISTIC_LOGIC = 1;
+}
+enum TrafficLightShape {
+  TLS_ROUND = 1;
+  TLS_UP_ARROW = 2;
+  TLS_LEFT_ARROW = 3;
+  TLS_RIGHT_ARROW = 4;
+  TLS_UP_LEFT_ARROW = 5;
+  TLS_UP_RIGHT_ARROW = 6;
+  TLS_UTURN = 7;
+  TLS_COUNTDOWN = 8;
+  TLS_TEXT = 9;
+}
+
+// NEXT ID: 30
+message TrafficLightStateProto {
+  // Traffic light related information.
+  // Timestamp of the latest trigger timestamp of the camera images inferenced
+  // together, this could be used to align traffic light state proto output
+  // temporally.
+  optional double timestamp_deprecated = 1 [deprecated = true];
+  optional int64 traffic_light_id = 2;
+  optional double camera_center_timestamp = 16;
+  optional double camera_trigger_timestamp = 17;
+  optional double tl_yaw_diff = 18;
+  optional double distance = 19;
+
+  // Estimated state related information.
+  optional TrafficLightColor color = 3;
+  optional TrafficLightShape shape = 4;
+  optional float score = 6;
+  optional bool flashing = 7 [default = false];
+  optional bool occluded = 8 [default = false];
+  optional float occlusion_ratio = 9 [default = 0];
+  // Net raw pre-fusion output.
+  // TODO: Add other raw pre-fusion output.
+  optional TrafficLightColor raw_color = 11;
+  // TODO: Add color info to debug.
+  optional TrafficLightColor temporal_fused_color = 24;
+  optional bool temporal_fused_flashing = 25 [default = false];
+  optional TrafficLightColor multi_camera_voted_color = 27;
+
+  optional TrafficLightStateSourceProto state_source = 10 [default = TL_SS_OBSERVATION];
+
+  // The traffic light region related information.
+  optional int32 x = 12;
+  optional int32 y = 13;
+  // TL center point projected from map
+  optional int32 raw_x = 30;
+  optional int32 raw_y = 31;
+  // May be subject to rescaling based on original width/height and overlap
+  // between tl regions.
+  optional int32 width = 14;
+  optional int32 height = 15;
+  optional int32 original_width = 20;
+  optional int32 original_height = 21;
+  repeated AABox2iProto light_body_bboxes = 22;
+  repeated AABox2iProto light_bboxes = 23;
+  optional TrafficLightCountDown countdown = 26 [default = TL_COUNTDOWN_UNKNOWN];
+  optional bool merged_result = 28 [default = false];
+  optional int32 countdown_int = 29;
+}
+
+enum ObjectSubType {
+  OST_UNKNOWN = 0;          //子类未知
+  OST_CAR = 1;              //小轿车
+  OST_TRUCK = 2;            //卡车
+  OST_SUV = 3;              // SUV
+  OST_MPV = 4;              // MPV以及面包车
+  OST_MINICAR = 5;          //微型小轿车
+  OST_MINITRUCK = 6;        //皮卡以及小货车
+  OST_SPECIAL_VEHICLE = 7;  //工程车
+}

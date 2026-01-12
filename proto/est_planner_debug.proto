@@ -1,0 +1,36 @@
+syntax = "proto2";
+
+package st.planning;
+// option go_package = "st.proto.ai/onboard/planning.proto/est_planning.debug";
+
+import "modules/cnoa_pnc/planning/proto/trajectory_validation.proto";
+import "modules/cnoa_pnc/planning/proto/initializer.proto";
+import "modules/cnoa_pnc/planning/proto/speed_finder.proto";
+import "modules/cnoa_pnc/planning/proto/scheduler.proto";
+import "modules/cnoa_pnc/planning/proto/turn_signal.proto";
+import "modules/cnoa_pnc/planning/proto/trajectory_point.proto";
+import "modules/cnoa_pnc/planning/proto/constraint.proto";
+import "modules/cnoa_pnc/planning/proto/optimizer.proto";
+import "modules/cnoa_pnc/planning/proto/planner_object.proto";
+import "modules/cnoa_pnc/planning/proto/planner_status.proto";
+
+// Next ID: 14
+message EstPlannerDebugProto {
+  optional TurnSignalReason turn_signal_reason_enum = 1;
+
+  optional FilteredTrajectories filtered = 3;
+  optional SpacetimePlannerObjectTrajectoriesProto st_planner_object_trajectories = 4;
+
+  optional SchedulerOutputProto scheduler = 12;
+  optional ConstraintProto constraint = 6;
+  optional InitializerDebugProto initializer = 7;
+  optional TrajectoryOptimizerDebugProto trajectory_optimizer = 8;
+  repeated PathPoint st_path_points = 15;
+  repeated ApolloTrajectoryPointProto capnet_ref_traj = 14;
+  optional SpeedFinderDebugProto speed_finder = 9;
+  optional TrajectoryValidationResultProto traj_validation = 10;
+
+  optional PlannerStatusProto planner_status = 11;
+
+  reserved 2, 5, 13;
+}

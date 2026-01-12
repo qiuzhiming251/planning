@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package ad_byd.planning.pb;
+
+message PlanLaneSequence {
+  repeated string lane_ids = 1;
+  repeated string logic_lane_ids = 2;
+  repeated int32 polyline_idx = 3;
+  repeated double lane_sequence_info = 4;
+  repeated int32 boundary_idx = 5;
+  repeated double navi_distance = 6;
+  repeated int32 obstacle_idx = 7;
+}

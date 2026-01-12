@@ -1,0 +1,14 @@
+syntax = "proto2";
+
+package st.mapping;
+
+message RouteSpecificSemanticMapProto {
+  optional string map_name = 1;
+  optional string map_sha = 2;
+  optional string route_id = 3;
+  repeated string patch_ids = 5;
+}
+
+message RouteSpecificSemanticMapsProto {
+  repeated RouteSpecificSemanticMapProto route_maps = 1;
+}

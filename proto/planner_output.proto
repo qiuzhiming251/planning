@@ -1,0 +1,21 @@
+syntax = "proto2";
+package st.planning;
+// option go_package = "st.proto.ai/onboard/planning.proto/planning.output";
+
+import "modules/cnoa_pnc/planning/proto/planner.proto";
+import "modules/cnoa_pnc/planning/proto/trajectory.proto";
+import "modules/cnoa_pnc/planning/proto/planner_state.proto";
+import "modules/cnoa_pnc/planning/proto/external_command_status.proto";
+import "modules/cnoa_pnc/planning/proto/hmi_content.proto";
+
+message PlannerOutput {
+  optional TrajectoryProto trajectory = 2;
+
+  optional PlannerDebugProto planner_debug = 5;
+
+  optional HmiContentProto hmi_content = 6;
+
+  optional PlannerExternalCommandStatusProto external_command_status = 8;
+
+  optional PlannerStateProto planner_state_proto = 9;  // To delete here
+}

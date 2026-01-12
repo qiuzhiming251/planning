@@ -1,0 +1,186 @@
+
+
+#ifndef AD_BYD_PLANNING_COMMON_GFLAGS_H
+#define AD_BYD_PLANNING_COMMON_GFLAGS_H
+
+#include "gflags/gflags.h"
+
+DECLARE_int32(ad_byd_planning_log_level);
+
+DECLARE_int32(ad_byd_prediction_pool_size);
+DECLARE_int32(ad_byd_city_planner_pool_size);
+
+DECLARE_int32(ad_byd_planning_future_wait_timeout);
+DECLARE_double(ad_byd_planning_zero_threshold);
+DECLARE_double(planner_max_drop_cruising_speed_limit);
+
+// map
+DECLARE_double(ad_byd_planning_map_search_heading_limit);
+DECLARE_double(ad_byd_planning_map_minimum_boundary_search_radius);
+DECLARE_double(ad_byd_planning_map_point_distance_threshold);
+DECLARE_double(ad_byd_planning_map_boundary_gap_threshold);
+DECLARE_double(ad_byd_planning_boundary_interpolate_dist);
+DECLARE_double(ad_byd_planning_lane_polyline_vector_dist);
+DECLARE_uint32(ad_byd_planning_lane_polyline_vector_num);
+DECLARE_uint32(ad_byd_planning_lane_vector_dim);
+DECLARE_double(ad_byd_planning_road_boundary_polyline_vector_dist);
+DECLARE_uint32(ad_byd_planning_road_boundary_polyline_vector_num);
+DECLARE_uint32(ad_byd_planning_road_boundary_vector_dim);
+
+DECLARE_uint32(ad_byd_planning_polygon_polyline_vector_num);
+DECLARE_uint32(ad_byd_planning_polygon_polyline_vector_dim);
+DECLARE_double(ad_byd_junction_search_radius);
+DECLARE_double(ad_byd_converged_entry_speed);
+DECLARE_double(ad_byd_lane_sequence_unique_distance);
+DECLARE_double(ad_byd_min_juction_lane_length);
+
+// map_scene
+DECLARE_double(ad_byd_planning_forward_lane_sequence_length);
+DECLARE_double(ad_byd_planning_backward_lane_sequence_length);
+
+// obstacles
+DECLARE_double(ad_byd_caution_obstacle_max_distance);
+DECLARE_int32(ad_byd_planning_obstacle_lru_cache_num);
+DECLARE_int32(ad_byd_obstacle_lru_cache_num);
+DECLARE_double(ad_byd_current_lane_search_dist);
+DECLARE_int32(ad_byd_max_dynamic_obstacle_num);
+DECLARE_string(ad_byd_adc_id);
+DECLARE_uint32(ad_byd_planning_max_obstacle_vector_size);
+DECLARE_uint32(ad_byd_planning_dynamic_obstacle_vector_dim);
+DECLARE_uint32(ad_byd_planning_static_obstacle_vector_dim);
+
+// car
+DECLARE_double(ad_byd_adc_L9_length);
+DECLARE_double(ad_byd_adc_L9_width);
+DECLARE_double(ad_byd_adc_L9_height);
+DECLARE_double(ad_byd_adc_L9_front_to_rear);
+
+// nn planner network
+
+// tensorrt
+DECLARE_string(ad_byd_planning_platform);
+DECLARE_string(ad_byd_planning_cache_data);
+DECLARE_bool(ad_byd_planning_set_cuda_graph);
+DECLARE_bool(ad_byd_planning_set_stream_priority);
+
+// pinned memory
+DECLARE_bool(ad_byd_planning_is_pinned_memory);
+
+// gtest
+DECLARE_string(ad_byd_planning_test_data);
+
+DECLARE_string(ad_byd_prediction_config);
+
+DECLARE_string(ad_byd_city_config);
+DECLARE_string(ad_byd_vehicle_params_path);
+
+// prediction reasoning
+DECLARE_string(ad_byd_prediction_vehicle_reasoning);
+DECLARE_string(ad_byd_prediction_cyclist_reasoning);
+DECLARE_string(ad_byd_prediction_pedestrian_reasoning);
+DECLARE_string(ad_byd_prediction_vehicle_reasoning_config);
+DECLARE_string(ad_byd_prediction_pedestrian_reasoning_config);
+DECLARE_string(ad_byd_prediction_cyclist_reasoning_config);
+
+DECLARE_bool(ad_byd_prediction_enable_multimodal_prediction);
+DECLARE_double(ad_byd_prediction_deterministic_probability);
+
+// prediction trajectory
+DECLARE_double(ad_byd_prediction_predict_period);
+DECLARE_double(ad_byd_prediction_trajectory_time_step);
+DECLARE_double(ad_byd_prediction_predict_extend_period);
+DECLARE_bool(ad_byd_prediction_enbale_trajectory_smooth);
+
+// lane former
+DECLARE_double(ad_byd_lane_former_priori_distance);
+DECLARE_double(ad_byd_lane_former_priori_probability);
+DECLARE_bool(ad_byd_lane_former_inhibit_eff_lc);
+DECLARE_double(ad_byd_lane_former_inhibit_eff_lc_dist_to_junction);
+DECLARE_double(ad_byd_lane_former_junction_navigation_reset_distance);
+DECLARE_double(ad_byd_lane_former_navigation_reset_diff_dis);
+DECLARE_int32(ad_byd_lane_former_max_roundabout_exit_range);
+DECLARE_int32(ad_byd_lane_former_max_roundabout_enter_range);
+DECLARE_int32(ad_byd_lane_former_min_roundabout_exit_range);
+DECLARE_int32(ad_byd_lane_former_min_roundabout_enter_range);
+
+DECLARE_bool(ad_byd_handle_special_split);
+DECLARE_bool(planner_enable_u_turn_speed_limit);
+DECLARE_bool(planner_enable_dynamic_lane_speed_limit);
+DECLARE_double(planner_override_lane_speed_limit_proportion);
+DECLARE_double(planner_prediction_probability_threshold);
+DECLARE_bool(planner_only_use_most_likely_trajectory);
+
+// Lane change style setting.
+DECLARE_bool(planner_enable_lc_style_params);
+
+// Scene reasoning
+DECLARE_bool(planner_enable_occluded_objects_inference);
+DECLARE_bool(planner_enable_crosswalk_occluded_objects_inference);
+DECLARE_bool(planner_ignore_stalled_objects_on_tl_controlled_leftmost_lane);
+DECLARE_bool(planner_enable_un_tl_controlled_intersection_reasoning);
+
+// check is mapless.
+DECLARE_bool(planner_mapless_status);
+
+// Initializer
+DECLARE_int32(planner_initializer_debug_level);
+DECLARE_bool(planner_initializer_only_activate_nodes_near_capnet_traj);
+DECLARE_bool(planner_initializer_only_activate_nodes_near_refline);
+DECLARE_int32(planner_initializer_max_multi_traj_num);
+DECLARE_bool(planner_initializer_enable_post_evaluation);
+DECLARE_bool(planner_initializer_enable_clip);
+DECLARE_double(planner_lc_safety_radical_factor);
+DECLARE_double(planner_lc_safety_conservative_factor);
+DECLARE_double(planner_lc_safety_normal_factor);
+DECLARE_double(planner_initializer_translate_center_line_buffer);
+DECLARE_double(planner_initializer_dist_for_inadvance_avoid);
+DECLARE_double(planner_initializer_dist_for_behind_avoid);
+DECLARE_double(planner_initializer_hysteresis_control_value);
+DECLARE_double(planner_initializer_consider_distance);
+DECLARE_bool(planner_enable_large_vehicle_avoid);
+DECLARE_bool(planner_enable_push);
+DECLARE_double(planner_pred_traj_horizon_for_dp_and_ddp);
+DECLARE_bool(planner_enable_pause_gap_cal);
+
+// Scheduler
+DECLARE_int32(planner_est_parallel_branch_num);
+DECLARE_bool(planner_est_scheduler_seperate_lc_pause);
+DECLARE_bool(planner_est_scheduler_allow_borrow);
+DECLARE_bool(planner_consider_all_lanes_virtual);
+DECLARE_bool(planner_enable_split_tasks);
+DECLARE_bool(planner_enable_use_exp_traj);
+DECLARE_bool(planner_enable_ld_lite_map);
+DECLARE_bool(planner_enable_bev_lite_match);
+DECLARE_double(planner_extend_traj_behind_ego_by_time);
+
+// Decision
+DECLARE_bool(planner_regard_green_flashing_as_green);
+DECLARE_bool(planner_enable_miss_navi_stop_line);
+
+// Offline DataDumping
+DECLARE_bool(planner_dumping_initializer_features);
+DECLARE_bool(planner_dumping_selector_features);
+DECLARE_bool(planner_filter_selector_intention);
+DECLARE_bool(planner_dumping_ml_data_in_simulation);
+// Dopt auto tuning.
+DECLARE_bool(planner_auto_tuning_mode);
+DECLARE_bool(planner_optimizer_data_cleaning);
+DECLARE_bool(planner_update_learned_alphas);
+DECLARE_bool(planner_update_learned_alphas_except_lane_change);
+DECLARE_string(planner_traj_opt_params_file_address);
+DECLARE_bool(planner_compare_different_weight);
+DECLARE_bool(planner_compare_based_on_original_weight);
+
+DECLARE_string(planner_thread_pool_bind_cores);
+
+// Acc
+DECLARE_bool(planner_enable_acc);
+
+// Selector
+DECLARE_bool(planner_enable_selector_cost_history);
+
+// Cut-off buffer
+DECLARE_double(planner_curb_cutoff_buffer);
+DECLARE_double(planner_obstacle_cutoff_buffer);
+
+#endif  // AD_BYD_PLANNING_COMMON_GFLAGS_H

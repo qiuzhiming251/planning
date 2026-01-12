@@ -1,0 +1,26 @@
+
+
+syntax = "proto2";
+
+package ad_byd.planning.pred_config;
+
+message PlatformConfig {
+  optional string platform = 1;
+  optional bool online_visualize = 2;
+  optional uint32 num_threads_pred = 3;
+  optional uint32 num_threads_plan = 4;
+  optional string bind_core_num = 5;
+}
+
+message PNPLaneFromerConfig {
+  optional bool inhibit_eff_lc = 1;
+  optional double inhibit_eff_lc_dist_to_junction = 2;
+  optional double junction_navigation_reset_distance = 3;
+  optional double navigation_reset_diff_dis = 4;
+  optional bool handle_special_split = 5;
+}
+
+message PredictionConfig {
+  repeated PlatformConfig platform_config = 1;
+  optional PNPLaneFromerConfig pnp_laneformer_config = 2;
+}

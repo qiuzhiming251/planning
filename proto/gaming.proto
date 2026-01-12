@@ -1,0 +1,42 @@
+
+syntax = "proto2";
+package st.planning;
+
+enum DrivelineStatus {
+  INIT_CHECK_FAILED = 0;
+  TRIGGER_FAILED = 1;
+  GENERATE_FAILED = 2;
+  GENERATE_SUCCEED = 3;
+}
+message StartPointProto {
+  optional double x = 1;
+  optional double y = 2;
+  optional double h = 3;
+}
+message DrivelineResultProto {
+  optional DrivelineStatus driveline_status = 1;
+  optional int32 trigger_failed_counter = 2;
+  optional string most_risk_obj = 3;
+  optional int32 most_risk_counter = 4;
+  optional StartPointProto start_point = 5;
+}
+message ObjectCooperationInfo {
+  repeated double observe_timestamp_list = 1;
+  repeated double observe_velocity_list = 2;
+  //repeated double observe_acc_list = 3;
+  repeated double ideal_yield_acc_list = 4;
+  repeated double ideal_pass_acc_list = 5;
+  optional double yield_cooperate_grade = 6 [default = 0.5];
+  optional double pass_cooperate_grade = 7 [default = 0.5];
+}
+message SpeedGamingObject {
+  optional string obj_id = 1;
+  optional ObjectCooperationInfo cooperation_info = 2;
+}
+message SpeedGamingResultProto {
+  repeated SpeedGamingObject speed_gaming_objects = 1;
+}
+message GamingResultProto {
+  optional DrivelineResultProto driveline_result = 1;
+  optional SpeedGamingResultProto speed_gaming_result = 2;
+}

@@ -1,0 +1,56 @@
+syntax = "proto3";
+
+import "modules/cnoa_pnc/planning/proto/common.proto";
+package ad_byd.planning.pb;
+
+message Lane {
+  string id = 1;
+  int32 type = 2;
+  double length = 3;
+  int32 split_topology = 4;
+  int32 merge_topology = 5;
+  double speed_limit = 6;
+  bool is_navi_route_lane = 7;
+  bool stop_line = 8;
+  int32 turn_type = 9;
+  int32 light_status = 10;
+  repeated Vec2d points = 11;
+  repeated string successors = 12;
+  repeated string predecessors = 13;
+  repeated string lefts = 14;
+  repeated string rights = 15;
+  repeated string left_lane_boundary_ids = 16;
+  repeated string right_lane_boundary_ids = 17;
+  repeated string left_road_boundary_ids = 18;
+  repeated string right_road_boundary_ids = 19;
+  string junction_id = 20;
+  repeated string cross_walks = 21;
+  repeated string sorted_successors = 22;
+  int32 lane_index = 23;
+}
+
+message Boundary {
+  string id = 1;
+  int32 type = 2;
+  int32 color = 3;
+  double width = 4;
+  repeated Vec2d points = 5;
+}
+
+message Polygon {
+  string id = 1;
+  int32 type = 2;
+  repeated Vec2d points = 3;
+}
+
+message LogicMap {
+  double timestamp = 1;
+  repeated Lane lanes = 2;
+  repeated Boundary lane_boundaries = 3;
+  repeated Boundary road_boundaries = 4;
+  repeated Boundary stopline = 5;
+  repeated Polygon junctions = 6;
+  repeated Polygon cross_walks = 7;
+  repeated Polygon speed_bumps = 8;
+  repeated string navi_route_ids = 9;
+}

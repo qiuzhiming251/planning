@@ -1,0 +1,426 @@
+id: "1"
+trajectories{
+    probability: 0.5
+    points{
+        pos{
+            x: 20.0
+            y: 10.0
+        }
+        s: 0.0
+        theta: -1.047
+        kappa: 0.0
+        t: 0.0
+        v: 5.0
+        a: 0.0
+    }
+    points{
+        pos{
+            x: 20.5002 
+            y: 9.13407
+        }
+        s: 1.0
+        theta: -1.047
+        kappa: 0.0
+        t: 0.2
+        v: 5.0
+        a: 0.0
+    }
+    points{
+        pos{
+            x: 21.0003 
+            y: 8.26815
+        }
+        s: 2.0
+        theta: -1.047
+        kappa: 0.0
+        t: 0.4
+        v: 5.0
+        a: 0.0
+    }
+    points{
+        pos{
+            x: 21.5005  
+            y: 7.40222
+        }
+        s: 3.0
+        theta: -1.047
+        kappa: 0.0
+        t: 0.6
+        v: 5.0
+        a: 0.0
+    }
+    points{
+        pos{
+            x: 22.0007  
+            y: 6.53629
+        }
+        s: 4.0
+        theta: -1.047
+        kappa: 0.0
+        t: 0.8
+        v: 5.0
+        a: 0.0
+    }
+    points{
+        pos{
+            x: 22.5009  
+            y: 5.67037
+        }
+        s: 5.0
+        theta: -1.047
+        kappa: 0.0
+        t: 1.0
+        v: 5.0
+        a: 0.0
+    }
+    points{
+        pos{
+            x: 23.001  
+            y: 4.80444
+        }
+        s: 6.0
+        theta: -1.047
+        kappa: 0.0
+        t: 1.2
+        v: 5.0
+        a: 0.0
+    }
+    points{
+        pos{
+            x: 23.5012  
+            y: 3.93851
+        }
+        s: 7.0
+        theta: -1.047
+        kappa: 0.0
+        t: 1.4
+        v: 5.0
+        a: 0.0
+    }
+    points{
+        pos{
+            x: 24.0014  
+            y: 3.07259
+        }
+        s: 8.0
+        theta: -1.047
+        kappa: 0.0
+        t: 1.6
+        v: 5.0
+        a: 0.0
+    }
+    points{
+        pos{
+            x: 24.5015  
+            y: 2.20666
+        }
+        s: 9.0
+        theta: -1.047
+        kappa: 0.0
+        t: 1.8
+        v: 5.0
+        a: 0.0
+    }
+    points{
+        pos{
+            x: 25.0017  
+            y: 1.34073
+        }
+        s: 10.0
+        theta: -1.047
+        kappa: 0.0
+        t: 2.0
+        v: 5.0
+        a: 0.0
+    }
+    points{
+        pos{
+            x: 25.5019 
+            y: 0.474807
+        }
+        s: 11.0
+        theta: -1.047
+        kappa: 0.0
+        t: 2.2
+        v: 5.0
+        a: 0.0
+    }
+    points{
+        pos{
+            x: 26.0021  
+            y: -0.391119
+        }
+        s: 12.0
+        theta: -1.047
+        kappa: 0.0
+        t: 2.4
+        v: 5.0
+        a: 0.0
+    }
+    points{
+        pos{
+            x: 26.5022  
+            y: -1.25705
+        }
+        s: 13.0
+        theta: -1.047
+        kappa: 0.0
+        t: 2.6
+        v: 5.0
+        a: 0.0
+    }
+    points{
+        pos{
+            x: 27.0024   
+            y: -2.12297
+        }
+        s: 14.0
+        theta: -1.047
+        kappa: 0.0
+        t: 2.8
+        v: 5.0
+        a: 0.0
+    }
+    points{
+        pos{
+            x: 27.5026   
+            y: -2.9889
+        }
+        s: 15.0
+        theta: -1.047
+        kappa: 0.0
+        t: 3.0
+        v: 5.0
+        a: 0.0
+    }
+    points{
+        pos{
+            x: 28.0027   
+            y: -3.85483
+        }
+        s: 16.0
+        theta: -1.047
+        kappa: 0.0
+        t: 3.2
+        v: 5.0
+        a: 0.0
+    }
+    points{
+        pos{
+            x: 28.5029   
+            y: -4.72075
+        }
+        s: 17.0
+        theta: -1.047
+        kappa: 0.0
+        t: 3.4
+        v: 5.0
+        a: 0.0
+    }
+    points{
+        pos{
+            x: 29.0031   
+            y: -5.58668
+        }
+        s: 18.0
+        theta: -1.047
+        kappa: 0.0
+        t: 3.6
+        v: 5.0
+        a: 0.0
+    }
+    points{
+        pos{
+            x: 29.5033   
+            y: -6.45261
+        }
+        s: 19.0
+        theta: -1.047
+        kappa: 0.0
+        t: 3.8
+        v: 5.0
+        a: 0.0
+    }
+    points{
+        pos{
+            x: 30.0034   
+            y: -7.31853
+        }
+        s: 20.0
+        theta: -1.047
+        kappa: 0.0
+        t: 4.0
+        v: 5.0
+        a: 0.0
+    }
+    points{
+        pos{
+            x: 30.5036   
+            y: -8.18446
+        }
+        s: 21.0
+        theta: -1.047
+        kappa: 0.0
+        t: 4.2
+        v: 5.0
+        a: 0.0
+    }
+    points{
+        pos{
+            x: 31.0038 
+            y: -9.05039
+        }
+        s: 22.0
+        theta: -1.047
+        kappa: 0.0
+        t: 4.4
+        v: 5.0
+        a: 0.0
+    }
+    points{
+        pos{
+            x: 31.5039  
+            y: -9.91631
+        }
+        s: 23.0
+        theta: -1.047
+        kappa: 0.0
+        t: 4.6
+        v: 5.0
+        a: 0.0
+    }
+    points{
+        pos{
+            x: 32.0041  
+            y: -10.7822
+        }
+        s: 24.0
+        theta: -1.047
+        kappa: 0.0
+        t: 4.8
+        v: 5.0
+        a: 0.0
+    }
+    points{
+        pos{
+            x: 32.5043  
+            y: -11.6482
+        }
+        s: 25.0
+        theta: -1.047
+        kappa: 0.0
+        t: 5.0
+        v: 5.0
+        a: 0.0
+    }
+    points{
+        pos{
+            x: 33.0044  
+            y: -12.5141
+        }
+        s: 26.0
+        theta: -1.047
+        kappa: 0.0
+        t: 5.2
+        v: 5.0
+        a: 0.0
+    }
+    points{
+        pos{
+            x: 33.5046   
+            y: -13.38
+        }
+        s: 27.0
+        theta: -1.047
+        kappa: 0.0
+        t: 5.4
+        v: 5.0
+        a: 0.0
+    }
+    points{
+        pos{
+            x: 34.0048   
+            y: -14.2459
+        }
+        s: 28.0
+        theta: -1.047
+        kappa: 0.0
+        t: 5.6
+        v: 5.0
+        a: 0.0
+    }
+    points{
+        pos{
+            x: 34.505   
+            y: -15.1119
+        }
+        s: 29.0
+        theta: -1.047
+        kappa: 0.0
+        t: 5.8
+        v: 5.0
+        a: 0.0
+    }
+    points{
+        pos{
+            x: 35.0051   
+            y: -15.9778
+        }
+        s: 30.0
+        theta: -1.047
+        kappa: 0.0
+        t: 6.0
+        v: 5.0
+        a: 0.0
+    }
+    type: PT_VEHICLE_LANE_FOLLOW
+    index: 1
+    is_reversed: false
+    intention: INTENTION_CROSS
+}
+perception_object{
+    id: "1"
+    type: OT_VEHICLE
+    pos{
+        x: 20.0
+        y: 10.0
+    }
+    yaw: -1.047
+    yaw_rate: 0.0
+    vel{
+        x: 2.5
+        y: -4.33
+    }
+    accel{
+        x: 0.0
+        y: 0.0
+    }
+    contour{
+        x: 22.11675
+        y: 8.33466
+    }
+    contour{
+        x: 19.61935
+        y: 12.6663
+    }
+    contour{
+        x: 17.88749
+        y: 11.6659
+    }
+    contour{
+        x: 20.3849
+        y: 7.33432
+    }
+    timestamp: 0.0
+    bounding_box{
+        x: 20.0
+        y: 10.0
+        heading: -1.047
+        width: 2.0
+        length: 5.0
+    }
+}
+stop_time{
+}
+long_term_behavior{
+}

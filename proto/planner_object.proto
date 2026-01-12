@@ -1,0 +1,97 @@
+syntax = "proto2";
+
+package st.planning;
+// option go_package = "st.proto.ai/onboard/planning.object/proto/planning.object";
+
+import "modules/cnoa_pnc/planning/proto/trajectory_point.proto";
+import "modules/cnoa_pnc/planning/proto/perception.proto";
+
+message FilterReason {
+  enum Type {
+    // No reason, equivalent to not filter.
+    NONE = 1;
+    // The stationary object is not on drive passage.
+    STATIONARY_OBJECT_NOT_ON_DRIVE_PASSAGE = 2;
+    // The trajectory is not on drive passage.
+    TRAJECTORY_NOT_ON_DRIVE_PASSAGE = 3;
+    // The trajectory's likelihood is too low.
+    TRAJECTORY_LOW_LIKELIHOOD = 4;
+    // The stationary object is totally behind AV.
+    STATIONARY_OBJECT_BEHIND_AV = 5;
+    // The object is moving away from AV.
+    OBJECT_BEHIND_MOVING_AWAY_FROM_AV = 6;
+    // The stationary object is not on sl boundary.
+    STATIONARY_OBJECT_NOT_ON_SL_BOUNDARY = 7;
+    // Reflected object in proximity. This is a hack to filter fake objects.
+    REFLECTED_OBJECT_IN_PROXIMITY = 8;
+    // The object trajectory is not on sl boundary.
+    TRAJECTORY_NOT_ON_SL_BOUNDARY = 9;
+    // The trajectory is not the most likely trajectory.
+    NOT_MOST_LIKELY_TRAJECTORY = 10;
+    // The stationary object is not within freespace region.
+    STATIONARY_OBJECT_NOT_IN_FREESPACE_REGION = 11;
+    // The trajectory is not within freespace region.
+    TRAJECTORY_NOT_IN_FREESPACE_REGION = 12;
+    // The trajectory has collision with a confident trajectory.
+    TRAJECTORY_COLLIDES_WITH_CONFIDENT_OTHERS = 13;
+    // Not acc target.
+    IGNORED_BY_ACC = 14;
+    STATIONARY_OBJECT_NOT_ON_TARGET_LANE = 15;
+    // The trajectory is frame is_frame_dropped
+    TRAJECTORY_IS_FRAME_DROPPED = 16;
+  }
+}
+
+// Records the filtered objects or predictions.
+message FilteredTrajectories {
+  message Filtered {
+    optional FilterReason.Type reason = 1;
+    // The object id.
+    optional string id = 2;
+    // The trajectory index.
+    optional int32 index = 3;
+  }
+  repeated Filtered filtered = 1;
+}
+
+message SpacetimePlannerObjectTrajectoryReason {
+  enum Type {
+    // No reason, equivalent to not filter.
+    NONE = 1;
+    // Spacetime planning.considers stationary trajectories.
+    STATIONARY = 2;
+    // Slow trajectories that moving with the same direction as the ego vehicle.
+    SIDE = 3;
+    // Trajectories that need emergency avoidance.
+    EMERGENCY_AVOIDANCE = 4;
+    // All front trajectories.
+    FRONT = 5;
+    // Added by planning. usually leading obj.
+    LEADING = 6;
+    // All trajectories.
+    ALL = 7;
+  }
+}
+
+// Records the trajectories considered in spacetime planning.
+message SpacetimePlannerObjectTrajectoriesProto {
+  message SpacetimePlannerObjectTrajectoryProto {
+    optional SpacetimePlannerObjectTrajectoryReason.Type reason = 1;
+    // The object id.
+    optional string id = 2;
+    // The trajectory index.
+    optional int32 index = 3;
+  }
+  repeated SpacetimePlannerObjectTrajectoryProto trajectory = 1;
+}
+
+message PlannerObjectProto {
+  optional ObjectProto object = 1;
+
+  message PredictionInfoProto {
+    optional double probability = 1;
+    repeated SecondOrderTrajectoryPointProto points = 2;
+  }
+  repeated PredictionInfoProto prediction = 2;
+  optional bool is_stationary = 3;
+}

@@ -1,0 +1,160 @@
+
+
+#ifndef ONBOARD_PLANNER_OBJECT_SPACETIME_PLANNER_OBJECT_TRAJECTORIES_FINDER_H_
+#define ONBOARD_PLANNER_OBJECT_SPACETIME_PLANNER_OBJECT_TRAJECTORIES_FINDER_H_
+
+#include <optional>
+#include <string>
+#include <vector>
+
+#include "absl/container/flat_hash_set.h"
+#include "plan_common/path_sl_boundary.h"
+#include "plan_common/util/decision_info.h"
+#include "plan_common/maps/lane_path.h"
+#include "plan_common/math/frenet_common.h"
+#include "plan_common/math/geometry/box2d.h"
+#include "plan_common/math/vec.h"
+#include "modules/cnoa_pnc/planning/proto/planner_object.pb.h"
+#include "modules/cnoa_pnc/planning/proto/trajectory_point.pb.h"
+#include "modules/cnoa_pnc/planning/proto/vehicle.pb.h"
+#include "spacetime_object_trajectory.h"
+#include "plan_common/maps/planner_semantic_map_manager.h"
+#include "plan_common/drive_passage.h"
+//#include "plan_common/util/hmi_content_util.h"
+//#include "object_manager/planner_object.h"
+
+namespace st {
+namespace planning {
+
+struct NudgeInfo {
+  int nudge_direction = 0;  // 1 left -1 right
+  double nudge_lmax = 0.0;
+  double nudge_back_ttc = 0.0;
+};
+class SpacetimePlannerObjectTrajectoriesFinder {
+ public:
+  virtual SpacetimePlannerObjectTrajectoryReason::Type Find(
+      const SpacetimeObjectTrajectory& traj) const = 0;
+  virtual ~SpacetimePlannerObjectTrajectoriesFinder() = default;
+};
+
+// Find all trajs for st planner.
+class AllSpacetimePlannerObjectTrajectoriesFinder
+    : public SpacetimePlannerObjectTrajectoriesFinder {
+ public:
+  AllSpacetimePlannerObjectTrajectoriesFinder() = default;
+  SpacetimePlannerObjectTrajectoryReason::Type Find(
+      const SpacetimeObjectTrajectory& traj) const override {
+    return SpacetimePlannerObjectTrajectoryReason::ALL;
+  };
+};
+
+// Find stationary trajs for st planner.
+class StationarySpacetimePlannerObjectTrajectoriesFinder
+    : public SpacetimePlannerObjectTrajectoriesFinder {
+ public:
+  StationarySpacetimePlannerObjectTrajectoriesFinder(
+      const PlannerSemanticMapManager* psmm, const mapping::LanePath& lane_path,
+      const Box2d& av_box, const VehicleGeometryParamsProto* veh_geo);
+  SpacetimePlannerObjectTrajectoryReason::Type Find(
+      const SpacetimeObjectTrajectory& traj) const override;
+
+  // BANDAID: This is a hack to identify a gate boom barrier. The box
+  // of boom area.
+  std::optional<Box2d> bool_barrier_box_or_;
+
+ private:
+  Box2d av_box_;
+  const VehicleGeometryParamsProto* veh_geo_;  // Not owned.
+};
+
+// Find side trajs (trajs that move along the direction of sdc) for st planner.
+class FrontSideMovingSpacetimePlannerObjectTrajectoriesFinder
+    : public SpacetimePlannerObjectTrajectoriesFinder {
+ public:
+  static constexpr double kComfortableNudgeCheckTime = 3.0;          // s.
+  static constexpr double kComfortableNudgeLatSpeedCheckTime = 2.0;  // s.
+  explicit FrontSideMovingSpacetimePlannerObjectTrajectoriesFinder(
+      const Box2d& av_box, const DrivePassage* drive_passage,
+      const PathSlBoundary* sl_boundary, double av_speed,
+      const SpacetimePlannerObjectTrajectoriesProto* prev_st_trajs,
+      const std::vector<ApolloTrajectoryPointProto>* time_aligned_prev_traj,
+      const VehicleGeometryParamsProto* veh_geo,
+      const PlannerSemanticMapManager* psmm,
+      const NudgeObjectInfo* nudge_object_info,
+      const LaneChangeStateProto* lane_change_state,
+      const std::vector<NudgeInfo>& nudgeinfos, const int& plan_id);
+  SpacetimePlannerObjectTrajectoryReason::Type Find(
+      const SpacetimeObjectTrajectory& traj) const override;
+
+ private:
+  Box2d av_box_;
+  const DrivePassage* drive_passage_;          // Not owned.
+  const PathSlBoundary* path_sl_boundary_;     // Not owned.
+  const VehicleGeometryParamsProto* veh_geo_;  // Not owned.
+  double av_speed_;
+  std::optional<FrenetBox> av_sl_box_;
+  absl::flat_hash_set<std::string> prev_st_planner_obj_id_;
+
+  // Is time_aligned_prev_traj inside path sl boundary from time 0 to
+  // kComfortableNudgeCheckTime.
+  const std::vector<ApolloTrajectoryPointProto>* time_aligned_prev_traj_;
+  mutable std::optional<bool> is_prev_traj_effective_;
+  mutable std::vector<Box2d> time_aligned_prev_traj_boxes_;
+
+  const PlannerSemanticMapManager* psmm_;
+  const NudgeObjectInfo* nudge_object_info_;
+  const LaneChangeStateProto* lane_change_state_;
+  const std::vector<NudgeInfo> nudgeinfos_;
+  const int plan_id_ = 0;
+};
+
+// TODO： Delete this finder.
+// Find very close side obj for st planner.
+class DangerousSideMovingSpacetimePlannerObjectTrajectoriesFinder
+    : public SpacetimePlannerObjectTrajectoriesFinder {
+ public:
+  explicit DangerousSideMovingSpacetimePlannerObjectTrajectoriesFinder(
+      const Box2d& av_box, const DrivePassage* drive_passage,
+      double av_velocity);
+  SpacetimePlannerObjectTrajectoryReason::Type Find(
+      const SpacetimeObjectTrajectory& traj) const override;
+
+ private:
+  Box2d av_box_;
+  const DrivePassage* drive_passage_;  // Not owned.
+  Vec2d av_tangent_;
+  double av_velocity_;
+  std::optional<FrenetBox> av_sl_box_;
+};
+
+// Find all trajs (in front of sdc) for st planner.
+// Use with caution, not fully tested yet.
+class FrontMovingSpacetimePlannerObjectTrajectoriesFinder
+    : public SpacetimePlannerObjectTrajectoriesFinder {
+ public:
+  explicit FrontMovingSpacetimePlannerObjectTrajectoriesFinder(
+      const DrivePassage* drive_passage,
+      const ApolloTrajectoryPointProto* plan_start_point, double av_length);
+  SpacetimePlannerObjectTrajectoryReason::Type Find(
+      const SpacetimeObjectTrajectory& traj) const override;
+
+ private:
+  const DrivePassage* drive_passage_;                   // Not owned.
+  const ApolloTrajectoryPointProto* plan_start_point_;  // Not owned.
+  FrenetCoordinate av_sl_;
+  double av_length_;  // AV length.
+};
+
+std::vector<NudgeInfo> CalNudgeinfo(
+    const std::vector<ApolloTrajectoryPointProto>* time_aligned_prev_traj,
+    const LaneChangeStateProto* lane_change_state,
+    const PathSlBoundary& sl_boundary,
+    const VehicleGeometryParamsProto& veh_geo,
+    const DrivePassage& drive_passage);
+
+}  // namespace planning
+}  // namespace st
+
+// NOLINTNEXTLINE
+#endif  // ONBOARD_PLANNER_OBJECT_SPACETIME_PLANNER_OBJECT_TRAJECTORIES_FINDER_H_

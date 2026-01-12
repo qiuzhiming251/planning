@@ -1,0 +1,59 @@
+syntax = "proto2";
+
+package st;
+
+import "modules/cnoa_pnc/planning/proto/aabox3d.proto";
+
+message VehicleDriveParamsProto {
+  optional double max_steer_angle = 1;  // radian.
+  optional double steer_ratio = 4;
+}
+
+message VehicleGeometryParamsProto {
+  // The length from vehicle's front bumper to rear axle center. It is a
+  // positive number.
+  optional double front_edge_to_center = 1;  // Meters.
+  // The length from vehicle's rear bumper to rear axle center. It is a positive
+  // number.
+  optional double back_edge_to_center = 2;  // Meters.
+  // The length from the left edge to the center point along the rear axle. It
+  // is a positive number.
+  optional double left_edge_to_center = 3;  // Meters.
+  // The length from the right edge to the center point along the rear axle. It
+  // is a positive number.
+  optional double right_edge_to_center = 4;  // Meters.
+  optional double length = 5;
+  optional double width = 6;
+  optional double height = 7;
+  optional double min_turn_radius = 8;
+  optional double wheel_base = 9;
+  optional double wheel_rolling_radius = 10;
+
+  // The left mirror is represented by an axis aligned box whose length
+  // direction is perpendicular with vehicle's heading direction. The left
+  // (right) side mirror's length points to the left (right) side of the
+  // vehicle.
+  //          vehicle heading
+  //                ^
+  //          +-----------+
+  //      +---|           |---+
+  //  L <-|   |  AV BODY  |   |-> R
+  //      +---|           |---+
+  //          |           |
+  //          |           |
+  //          |     ^ x   |
+  //          |     |     |
+  //          |y    |     |
+  //          |<----O z   |
+  //          |___________|
+  // z axis points outside the screen.
+  // origin locates at rear axis center with z=0 on the ground.
+  optional AABox3dProto left_mirror = 11;
+  optional AABox3dProto right_mirror = 12;
+  required string platform = 13;  // vehicle platform
+}
+
+message VehicleParamsProto {
+  optional VehicleGeometryParamsProto vehicle_geometry_params = 8;
+  optional VehicleDriveParamsProto vehicle_drive_params = 9;
+}

@@ -1,0 +1,39 @@
+syntax = "proto2";
+
+message DataConfig {
+  optional string record_path = 1;
+  optional double start_timestamp = 2;   // reserved
+  optional double eval_time_offset = 3;  // reserved
+  optional double duration = 4;          // reserved
+}
+
+message ChangeLaneTypeEvalConfig {
+  optional double timestamp_begin_to_eval = 1;  // reserved
+  optional double duration = 2;                 // reserved
+  optional string target_type = 3;
+}
+
+message ChangeLaneIntersectionEvalConfig {
+  optional string reserved = 1;
+}
+
+message ChangeLaneBackandForthEvalConfig {
+  optional string reserved = 1;
+}
+
+message MetricEvalConfig {
+  optional string metric_id = 1;
+  optional bool if_needed = 2;
+  oneof specific_config {
+    ChangeLaneTypeEvalConfig change_lane_type_config = 3;
+    ChangeLaneIntersectionEvalConfig change_lane_intersection_config = 4;
+    ChangeLaneBackandForthEvalConfig change_lane_backandforth_config = 5;
+  }
+}
+
+message MetricMessage {
+  optional string name = 1;
+  optional string uid = 2;
+  optional DataConfig data_config = 3;
+  repeated MetricEvalConfig metric_eval_configs = 4;
+}

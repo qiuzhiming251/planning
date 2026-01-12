@@ -1,0 +1,16 @@
+syntax = "proto2";
+
+package st.planning;
+
+enum BlockReason {
+  NONE = 1;
+  CURB_CROSS = 2;
+  OBS_CENTER_CURB = 3;
+  OBS_CENTER_OCCUPATION = 4;
+  OBS_CENTER_TOO_NEAR = 5;
+  OBS_CENTER_SINGLE = 6;
+  OBS_BOUNDARY_CURB = 7;
+  OBS_NEIGHBOR_TREND = 8;
+  OBS_NEIGHBOR_TRIANGLE = 9;
+  OBS_ROW_OBSTACLES = 10;
+}

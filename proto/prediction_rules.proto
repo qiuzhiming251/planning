@@ -1,0 +1,48 @@
+
+
+syntax = "proto2";
+
+package ad_byd_planning.prediction.reasoning;
+
+message HandleModelTrajectory {
+}
+
+message ChoosePredictionBehavior {
+}
+
+message GenerateConstrainByBehavior {
+}
+
+message RefinePathReverseTraj {
+}
+
+message RecallCutin {
+}
+
+message RightMergeRule {
+}
+
+message JunctionIntentionRule {
+}
+
+message CyclistRecallCutin {
+}
+
+message RuleLayer {
+  optional int32 serial_number = 1;
+  optional string name = 2;
+  oneof rule_oneof {
+    HandleModelTrajectory handle_model_trajectory = 4;
+    ChoosePredictionBehavior choose_prediction_behavior = 5;
+    GenerateConstrainByBehavior generate_constrain_by_behavior = 6;
+    RefinePathReverseTraj refine_path_reverse_traj = 7;
+    RecallCutin recall_cutin = 8;
+    RightMergeRule right_merge_rule = 9;
+    JunctionIntentionRule junction_intention_rule = 10;
+    CyclistRecallCutin cyclist_recall_cutin = 11;
+  }
+}
+
+message ReasonRules {
+  repeated RuleLayer rule_layer = 1;
+}

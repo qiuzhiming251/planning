@@ -1,0 +1,11 @@
+syntax = "proto2";
+
+package st.vis;
+// option go_package = "st.proto.ai/onboard/vis/common/proto/color";
+
+message ColorRGBAProto {
+  // Bytes high to low: red, green, blue, alpha (i.e. highest byte is red; on a
+  // little-endian this is the last byte among the four).
+  optional fixed32 rgba = 5;
+  reserved 1 to 4;
+}

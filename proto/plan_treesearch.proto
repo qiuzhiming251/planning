@@ -1,0 +1,39 @@
+syntax = "proto3";
+
+package ad_byd.planning.pb;
+
+message ObstacleDecision {
+  string id = 1;
+  int32 type = 2;
+  int32 decision = 3;
+  int32 path_index = 4;
+  double min_distance = 5;
+};
+
+message PathPoint {
+  double x = 1;
+  double y = 2;
+  double theta = 3;
+  double kappa = 4;
+  double dkappa = 5;
+  double s = 6;
+  double l = 7;
+  double accum_s = 8;
+}
+
+message TrajectoryPoint {
+  PathPoint point = 1;
+  double t = 2;
+  double v = 3;
+  double a = 4;
+  double j = 5;
+}
+
+message Trajectory {
+  repeated TrajectoryPoint trajectory = 1;
+}
+
+message DecisionSequence {
+  repeated ObstacleDecision decisions = 1;
+  repeated TrajectoryPoint decision_trajectory = 2;
+}

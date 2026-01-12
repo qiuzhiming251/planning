@@ -1,0 +1,20 @@
+rule_layer {
+    serial_number: 1
+    name: "choose_prediction_behavior"
+    choose_prediction_behavior {
+    }
+}
+
+rule_layer {
+    serial_number: 2
+    name: "handle_model_trajectory"
+    handle_model_trajectory {
+    }
+}
+
+rule_layer {
+    serial_number: 3
+    name: "generate_constrain_by_behavior"
+    generate_constrain_by_behavior {
+    }
+}

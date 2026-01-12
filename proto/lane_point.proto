@@ -1,0 +1,8 @@
+syntax = "proto2";
+
+package st.mapping;
+
+message LanePointProto {
+  optional uint64 lane_id = 1;
+  optional double fraction = 2;
+}

@@ -1,0 +1,172 @@
+syntax = "proto3";
+
+import "modules/cnoa_pnc/planning/proto/common.proto";
+import "modules/cnoa_pnc/planning/proto/logic_map.proto";
+import "modules/cnoa_pnc/planning/proto/vector_map.proto";
+import "modules/cnoa_pnc/planning/proto/dynamic_object.proto";
+import "modules/cnoa_pnc/planning/proto/plan_lane_sequence.proto";
+import "modules/cnoa_pnc/planning/proto/plan_treesearch.proto";
+import "modules/cnoa_pnc/planning/proto/bev_info.proto";
+
+package ad_byd.planning.pb;
+
+message EgoFeature {
+  repeated DynamicObject history = 1;
+  repeated DynamicObject future = 2;
+  double future_length = 3;
+  string current_lane_id = 4;
+  repeated string future_lane_ids = 5;
+  double distance_to_junction = 6;
+  int32 junction_type = 7;
+  double rided_distance = 8;
+  double left_boundary_distance = 9;
+  double right_boundary_distance = 10;
+  double theta_to_ego = 11;
+  string online_final_lane = 13;
+  double sequence_index = 14;
+  double navi_diff_distance = 15;
+  double lc_count_for_junction = 16;
+  double distance_to_turn = 17;
+  int32 turn_type = 18;
+  double lc_count_for_turn = 19;
+  string behind_normal_lane_id = 20;
+  string first_junction_id = 21;
+  int32 is_in_roundabout = 22;
+  int32 junction_num_enter_roundabout = 23;
+  int32 junction_num_exit_roundabout = 24;
+  int32 distance_to_enter_roundabout = 25;
+  int32 distance_to_exit_roundabout = 26;
+}
+
+message DynamicObstacleFeature {
+  repeated DynamicObject history = 1;
+  repeated DynamicObject future = 2;
+  double future_length = 3;
+  int32 decision_tag = 4;
+
+  // gt
+  Tensor traj_gt = 5;
+  Tensor path_gt_real = 6;
+  Tensor path_gt_virtual = 7;
+  Tensor path_intention_lane = 8;
+  Tensor path_intention_anchor = 9;
+  Tensor path_gt_real_6s = 10;
+  Tensor path_gt_virtual_6s = 11;
+  Tensor path_intention_lane_6s = 12;
+  Tensor path_intention_anchor_6s = 13;
+  Tensor map_polyline_gt = 14;
+  Tensor map_exit_lane_polyline_gt = 15;
+  Tensor target_point_index_array = 16;
+  Tensor goals_2d = 17;
+  Tensor vru_target_tag = 18;
+  Tensor is_lack_exit_lane = 19;
+
+  repeated string prediction_tag = 80;
+}
+
+message StaticObstacleFeature {
+  string id = 1;
+  int64 seq_num = 2;
+  double timestamp = 3;
+  Vec2d position = 4;
+  double heading = 5;
+  double length = 6;
+  double width = 7;
+  double height = 8;
+  int32 type = 9;
+  repeated Vec2d polygon = 10;
+  int32 decision_tag = 11;
+  string current_lane_id = 12;
+}
+
+message MapFeature {
+  LogicMap logic_map = 1;
+  VectorMap vector_map = 2;
+}
+
+message ModelSample {
+  // feature
+  Tensor sdv_current = 1;
+  Tensor sdv_history = 2;
+  Tensor obstacle = 3;
+  Tensor static_obs = 4;
+  Tensor lane = 5;
+  Tensor boundary = 6;
+  Tensor polygon = 7;
+  Tensor lane_seq_index = 8;
+  Tensor lane_seq_info = 9;
+  Tensor decision_candidate = 10;
+  Tensor decision_candidate_sdv_ts_traj = 101;
+  BEVInfo bev_info = 33;
+
+  // label
+  Tensor decision_index_eval_gt = 102;
+  Tensor decision_obstacle_future_trajectory = 103;
+  Tensor lane_seq_index_gt = 11;
+  Tensor decision_index_gt = 12;
+  Tensor cover_rate_cal_index = 121;
+  Tensor sdv_traj_gt = 13;
+  Tensor obs_traj_gt = 14;
+  Tensor path_gt_real = 15;
+  Tensor path_gt_virtual = 16;
+  Tensor path_intention_lane = 17;
+  Tensor path_intention_anchor = 18;
+  Tensor path_gt_real_6s = 19;
+  Tensor path_gt_virtual_6s = 20;
+  Tensor path_intention_lane_6s = 21;
+  Tensor path_intention_anchor_6s = 22;
+  Tensor map_polyline_gt = 23;
+  Tensor map_exit_lane_polyline_gt = 24;
+  Tensor map_exit_lane = 25;
+  Tensor target_point_index_array = 26;
+  Tensor goals_2d = 27;
+  string obs_tag_str = 28;
+  repeated string obs_tag = 29;
+  Tensor boundary_idxs = 30;
+  repeated int64 obstacle_ids = 31;
+  repeated int64 static_obs_ids = 32;
+  Tensor obstacle_idxs = 34;
+}
+
+message PolylineInfo {
+  repeated string lane_polyline_infos = 1;
+  repeated string lane_boundary_polyline_infos = 2;
+  repeated string road_boundary_polyline_infos = 3;
+  repeated string crosswalk_polyline_infos = 4;
+  repeated string junction_polyline_infos = 5;
+  repeated string speed_bump_polyline_infos = 6;
+  repeated string stopline_polyline_infos = 7;
+  repeated string dynamic_obstacle_infos = 8;
+  repeated string static_obstacle_infos = 9;
+}
+
+message Frame {
+  int64 seq_num = 1;
+  double timestamp = 2;
+  EgoFeature ego_feature = 3;
+  map<string, DynamicObstacleFeature> dynamic_obstacle = 4;
+  map<string, StaticObstacleFeature> static_obstacle = 5;
+  MapFeature map_feature = 6;
+  PolylineInfo polyline_info = 7;
+
+  // Lane sequence annotation
+  repeated PlanLaneSequence lane_sequences = 8;
+  int32 target_lane_sequence_index = 9;
+
+  // Treesearch annotation
+  repeated DecisionSequence decision_sequences = 10;
+  int32 target_decision_sequence_index = 11;
+  repeated int32 target_decision_sequence_eval_index_list = 110;
+  repeated Trajectory decision_obstacle_future_trajectory = 111;
+  int32 cover_rate_index = 112;
+
+  string clip_name = 12;
+  ModelSample model_sample = 13;
+
+  Tensor sdv_traj_gt = 14;
+
+  repeated string tag = 100;
+  string process_status = 101;
+  string offline_final_lane = 102;
+  repeated string lc_reason = 103;
+}

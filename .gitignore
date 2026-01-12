@@ -1,0 +1,5 @@
+scripts/release.sh
+.vscode
+user.bazelrc
+
+*__pycache__/

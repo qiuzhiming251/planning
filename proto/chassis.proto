@@ -1,0 +1,12 @@
+// This code is from apollo and modified by BYD.
+syntax = "proto2";
+
+package st.planning;
+
+message Chassis {
+  // Real steering location in [%], ranging from -100 to 100.
+  // steering_angle / max_steering_angle
+  // Clockwise: negative
+  // CountClockwise: positive
+  optional float steering_percentage = 11 [default = nan];
+}

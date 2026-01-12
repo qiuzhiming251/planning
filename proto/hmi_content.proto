@@ -1,0 +1,82 @@
+syntax = "proto2";
+
+package st;
+
+import "modules/cnoa_pnc/planning/proto/lite_common.proto";
+import "modules/cnoa_pnc/planning/proto/lane_path.proto";
+import "modules/cnoa_pnc/planning/proto/affine_transformation.proto";
+
+message HmiPathBoundaryProto {
+  enum BoundaryRenderStyle {
+    STYLE_NORMAL = 0;
+    STYLE_WARN = 1;
+  }
+
+  repeated Vec2dProto left_boundary = 1;
+  repeated Vec2dProto right_boundary = 2;
+  optional BoundaryRenderStyle left_render_style = 3;
+  optional BoundaryRenderStyle right_render_style = 4;
+}
+
+message HmiContentProto {
+  optional LiteHeader header = 1;
+
+  // If available, this is a request to display a predefined message (e.g. for
+  // a fixed duration such as 5s).
+  enum MessageType {
+    MSG_NONE = 0;
+    MSG_VEHICLE_STARTING = 1;
+    MSG_VEHICLE_PULLING_IN = 2;
+    MSG_VEHICLE_STOPPED = 3;
+    MSG_TRAFFIC_CONGESTION = 4;
+    MSG_YIELDING_TO_PEDESTRIAN = 5;
+    MSG_YIELDING_TO_NON_MOTORIZED_VEHICLE = 6;
+    MSG_YIELDING_TO_VEHICLE = 7;
+    MSG_UNPROTECTED_LEFT_TURN = 8;
+    MSG_ADVERSE_WEATHER_CONDITIONS = 9;
+    MSG_PASSING_VEHICLE = 10;
+    MSG_HANDLING_CUT_IN = 11;
+  }
+  optional MessageType message = 2;
+
+  optional int64 turning = 4 [default = 0];  // 0 : not turning. 1: left. -1: right.
+
+  enum DrivingState {
+    DS_OVERTAKING = 0;
+    DS_YIELDING_CUT_IN = 1;
+    DS_BORROW_OPPOSITE_LANE = 2;
+    DS_UNPROTECTED_LEFT_TURNING = 3;
+    DS_THROUGH_ROUNDABOUT = 4;
+    DS_REQUEST_HELP_LANE_CHANGE_BY_ROUTE = 5;
+  }
+
+  repeated DrivingState driving_states = 5;
+
+  optional HmiPathBoundaryProto path_boundary = 8;
+
+  optional double distance_to_traffic_light_stop_line = 9;
+
+  optional double distance_to_roadblock = 12;
+
+  message HighlightObjectInfo {
+    optional string object_id = 1;
+
+    enum HighlightObjectType {
+      HLO_ACC_FOLLOWING_TARGET = 0;
+
+      HLO_SPEED_DECEL_TARGET = 10;
+      HLO_LANE_CHANGE_UNSAFE = 11;
+      HLO_NUDGE_OBJECT = 12;
+      HLO_NUDGE_LARGE_VEHICLE = 13;
+    }
+    optional HighlightObjectType type = 2;
+    optional double dist_to_object = 3;
+  }
+  repeated HighlightObjectInfo highlight_objects = 11;
+
+  optional mapping.LanePathProto plc_target_lane_path = 13;
+  optional string online_map_id = 14;
+
+  reserved 6, 7, 10, 15;
+  // Next id: 16.
+}

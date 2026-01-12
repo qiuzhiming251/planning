@@ -1,0 +1,8 @@
+syntax = "proto2";
+
+package st;
+
+message PiecewiseConstFunctionDoubleProto {
+  repeated double x = 1;
+  repeated double y = 2;
+}

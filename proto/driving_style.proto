@@ -1,0 +1,35 @@
+syntax = "proto2";
+
+package st;
+
+enum LaneChangeStyle {
+  LC_STYLE_NORMAL = 1;
+  LC_STYLE_RADICAL = 2;
+  LC_STYLE_CONSERVATIVE = 3;
+}
+
+enum SpeedResponseStyle {
+  SPEED_RESPONSE_CONSERVATIVE = 0;
+  SPEED_RESPONSE_NORMAL = 1;
+  SPEED_RESPONSE_FAST = 2;
+  SPEED_RESPONSE_RADICAL = 3;
+}
+
+enum PathResponseStyle {
+  PATH_RESPONSE_CONSERVATIVE = 0;
+  PATH_RESPONSE_NORMAL = 1;
+  PATH_RESPONSE_FAST = 2;
+  PATH_RESPONSE_RADICAL = 3;
+}
+
+message LaneChangeStyleDeciderResultProto {
+  optional PathResponseStyle active_path_response_style = 1 [default = PATH_RESPONSE_NORMAL];
+  optional SpeedResponseStyle active_speed_response_style = 2 [default = SPEED_RESPONSE_NORMAL];
+
+  optional PathResponseStyle prepared_path_response_style = 3 [default = PATH_RESPONSE_NORMAL];
+  optional SpeedResponseStyle prepared_speed_response_style = 4 [default = SPEED_RESPONSE_NORMAL];
+  optional int32 prepared_path_response_style_counter = 5 [default = 0];
+  optional int32 prepared_speed_response_style_counter = 6 [default = 0];
+
+  optional bool congestion_scene = 7 [default = false];
+}

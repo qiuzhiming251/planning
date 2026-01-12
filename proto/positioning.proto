@@ -1,0 +1,41 @@
+syntax = "proto2";
+
+package st;
+
+import "modules/cnoa_pnc/planning/proto/lite_common.proto";
+import "modules/cnoa_pnc/planning/proto/affine_transformation.proto";
+
+// Next ID: 16
+message PoseProto {
+  optional LiteHeader header = 1;
+
+  optional Vec3dProto pos_smooth = 2;  // RAC position in smooth frame.
+  // optional RotationProto attitude = 4;  // Attitude (global->smooth rotation).
+
+  optional double yaw = 15;    // Yaw in smooth frame (heading) in radians.
+  optional double pitch = 16;  // Pitch in smooth frame in radians.
+  optional double roll = 17;   // Roll in smooth frame in radians.
+
+  // Velocity in body frame. vel_body.x represent vehicle forward speed.
+  optional Vec3dProto vel_body = 5;
+  optional Vec3dProto ar_body = 6;     // Angular rate in body frame.
+  optional Vec3dProto accel_body = 7;  // Acceleration in body frame.
+
+  optional Vec3dProto vel_smooth = 8;     // Velocity in smooth frame.
+  optional Vec3dProto ar_smooth = 9;      // Angular rate in smooth frame.
+  optional Vec3dProto accel_smooth = 10;  // Acceleration in smooth frame.
+
+  // optional Mat3dProto pos_smooth_cov = 11;       // RAC position covariance.
+  // optional Mat3dProto attitude_smooth_cov = 12;  // Attitude covariance.
+  // optional Mat3dProto vel_smooth_cov = 13;       // Velocity covariance.
+
+  optional double timestamp = 14;  // Seconds.
+  // optional double gnss_time_correction = 18;  // Seconds.
+  // speed = vel_smooth.norm(). Always positive. Meters per second.
+  optional double speed = 20;
+  // optional double trip_distance = 21;  // Meters.
+
+  // optional double curvature = 23;
+  // optional bool is_smooth_coordinate_drifted_slow = 24;
+  reserved 3, 19;
+}

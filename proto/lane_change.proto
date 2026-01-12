@@ -1,0 +1,54 @@
+syntax = "proto2";
+
+package st;
+// option go_package = "st.proto.ai/onboard/planning.scheduler/proto/lane_change";
+
+// Not using planning.namespace.
+
+enum LaneChangeStage {
+  LCS_NONE = 0;
+  LCS_WAITING = 1;
+  LCS_EXECUTING = 2;
+  LCS_PAUSE = 3;
+  LCS_RETURN = 4;
+}
+
+enum PushState {
+  NONE_PUSH = 0;
+  LEFT_PUSH = 1;
+  RIGHT_PUSH = 2;
+  CONGESTION_LEFT_PUSH = 3;
+  CONGESTION_RIGHT_PUSH = 4;
+}
+
+message LaneChangeStateProto {
+  optional LaneChangeStage stage = 1;
+  optional bool crossed_boundary = 9;
+  optional bool entered_target_lane = 3;
+  // Whether this is a lane change to left side.
+  optional bool lc_left = 5;
+  optional bool force_merge = 8 [default = false];
+  optional PushState push_state = 10;
+  optional PushState pre_push_state = 11;
+
+  reserved 2, 4, 6, 7;
+
+  // Next ID: 9
+}
+
+message PushStatusProto {
+  optional int32 push_lane_safe_count = 1 [default = 0];
+  optional int32 push_lane_unsafe_count = 2 [default = 0];
+  optional int32 push_lane_solid_count = 3 [default = 0];
+  optional int32 push_lane_dashed_count = 4 [default = 0];
+  optional int32 force_invalid_count = 5 [default = 0];
+  optional bool force_lc_left = 6 [default = false];
+}
+
+message LaneChangeSafetyInfo {
+  optional bool have_check_lc_left_safe = 1 [default = false];
+  optional bool have_check_lc_right_safe = 2 [default = false];
+  optional bool lc_left_safe = 3 [default = false];
+  optional bool lc_right_safe = 4 [default = false];
+  optional int32 ego_lane_block_by_obs_cnt = 5;
+}

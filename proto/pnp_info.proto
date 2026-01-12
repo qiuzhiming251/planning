@@ -1,0 +1,18 @@
+syntax = "proto2";
+
+package st;
+
+message PNPInfos {
+  repeated PNPInfo infos = 1;
+}
+
+message PNPInfo {
+  optional double probabilty = 1;
+  repeated uint64 target_lane_sequence_ids = 2;
+  repeated CandidateLaneSeq candidate_lane_seq = 3;
+  optional int32 lc_reason = 14;
+}
+
+message CandidateLaneSeq {
+  repeated string candidate_lane_id = 1;
+}

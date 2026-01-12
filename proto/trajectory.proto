@@ -1,0 +1,41 @@
+syntax = "proto2";
+
+package st.planning;
+import "modules/cnoa_pnc/planning/proto/lite_common.proto";
+import "modules/cnoa_pnc/planning/proto/lane_path.proto";
+
+import "modules/cnoa_pnc/planning/proto/trajectory_validation.proto";
+
+import "modules/cnoa_pnc/planning/proto/turn_signal.proto";
+import "modules/cnoa_pnc/planning/proto/lane_change.proto";
+
+import "modules/cnoa_pnc/planning/proto/trajectory_point.proto";
+
+message TrajectoryProto {
+  optional LiteHeader header = 1;
+
+  // The planning.s trajectory start timestamp in seconds.
+  optional double trajectory_start_timestamp = 23;
+
+  optional uint64 planner_state_seq_num = 26;
+
+  // TODO: Migrate trajectory points from `ApolloTrajectoryPointProto`
+  // to `TrajectoryPointProto`.
+  repeated ApolloTrajectoryPointProto trajectory_point = 3;
+
+  optional mapping.LanePathProto target_lane_path_from_current = 6;
+
+  optional TurnSignal turn_signal = 8;
+
+  // Traj points in the past, ascending in relative time (all negative).
+  repeated ApolloTrajectoryPointProto past_points = 9;
+
+  optional LaneChangeStage lane_change_stage = 17;
+  optional bool lane_change_left = 18;
+
+  optional planning.TrajectoryValidationResultProto traj_validation_result = 19;
+
+  // Next ID: 30
+
+  reserved 2, 5, 7, 10 to 16, 21, 24, 25;
+}

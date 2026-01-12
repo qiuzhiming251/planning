@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package ad_byd.planning.pb;
+
+message Vec2d {
+  double x = 1;
+  double y = 2;
+}
+
+message Tensor {
+  string name = 1;
+  repeated double value = 2;
+  repeated int32 shape = 3;
+}

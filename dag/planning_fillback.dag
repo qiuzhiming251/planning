@@ -1,0 +1,13 @@
+module_config {
+    module_library : "../modules/cnoa_pnc/cnoa_plan/libs/x86/libplan_component.so"
+    timer_components {
+        class_name : "BydPlanningComponent"
+        config {
+            name : "byd_plan"
+            interval : 100
+            flag_file_path : "../modules/cnoa_pnc/planning/conf/planner_flags.conf"
+            config_file_path : "../modules/cnoa_pnc/planning/conf/common/"
+            disable_timer: false
+        }
+    }
+}

@@ -1,0 +1,119 @@
+syntax = "proto2";
+
+package st.planning;
+// option go_package = "st.proto.ai/onboard/planning.decision/proto/traffic_light_info";
+
+import "modules/cnoa_pnc/planning/proto/timestamp.proto";
+import "modules/cnoa_pnc/planning/proto/perception.proto";
+// Generate protos for vantege show,will be writed to PlannerDebugProto
+enum TlColor {
+  TL_COLOR_UNKNOWN = 0;
+  TL_COLOR_RED = 1;
+  TL_COLOR_YELLOW = 2;
+  TL_COLOR_GREEN = 3;
+  TL_COLOR_BLOCK = 4;
+  TL_COLOR_NOLIGHT = 5;
+}
+
+enum IndStatus {
+  TL_NO_MESSAGE = 0;                      //绿灯通行
+  TL_GREEN_LIGHT_PASS = 1;                //绿灯通行
+  TL_RAD_LIGHT_STOP = 2;                  //红灯刹停
+  TL_YELLOW_LIGHT_STOP = 3;               //黄灯刹停
+  TL_YELLOW_LIGHT_PASS = 4;               //黄灯黄闪通行
+  TL_GREEN_BLINK_PASS = 5;                //绿闪通行
+  TL_GREEN_BLINK_STOP = 6;                //绿闪刹停
+  TL_LONG_YELLOW_BLINK_PASS = 7;          //黄灯长闪通行
+  TL_YELLOW_BLINK_STOP = 8;               //黄闪刹停
+  TL_WAITING_AREA_PASS = 9;               //待行区可进入
+  TL_PAY_ATTENTION_TO_TRAFFICLIGHT = 10;  //请注意红绿灯
+  TL_UTURN_NOLIGHT_PASS = 11;             //无灯可调头
+  TL_UTURN_GREENLIGHT_PASS = 12;          //绿灯可调头
+  TL_UTURN_GREENBLINK_PASS = 13;          //绿闪可调头
+  TL_UTURN_YELLOWLIGHT_PASS = 14;         //黄闪可调头
+  TL_UTURN_LONGYELLOWLIGHT_PASS = 15;     //黄灯长闪可调头
+}
+
+message SingleTrafficLightInfoProto {
+  optional string traffic_light_id = 1;
+  optional TlColor color = 2;
+  optional bool flashing = 3;
+  optional double turn_red_time_left = 4;
+  optional double control_point_relative_s = 5;
+  optional double countdown = 6;
+}
+
+message TrafficLightInfoProto {
+  optional string lane_id = 1;
+  optional SingleTrafficLightInfoProto isolated_tl_info = 2;
+  optional SingleTrafficLightInfoProto straight_tl_info = 3;
+  optional SingleTrafficLightInfoProto left_tl_info = 4;
+  optional SingleTrafficLightInfoProto right_tl_info = 5;
+  optional SingleTrafficLightInfoProto uturn_tl_info = 6;
+}
+
+// Generate protos for caching, will be writed to PlannerStateProto
+message TrafficLightStateHistoryProto {
+  repeated Timestamp time = 1;
+  repeated TrafficLightStateProto value = 2;
+}
+
+enum TrafficLightState {
+  TL_STATE_UNKNOWN = 0;
+  TL_STATE_RED = 1;
+  TL_STATE_YELLOW = 2;
+  TL_STATE_GREEN_FLASHING = 3;
+  TL_STATE_GREEN = 4;
+  TL_STATE_YELLOW_FLASHING = 5;
+}
+
+enum TrafficLightDirection {
+  UNMARKED = 0;
+  STRAIGHT = 1;
+  LEFT = 2;
+  RIGHT = 3;
+  UTURN = 4;
+}
+
+enum TrafficLightControlType {
+  SINGLE_DIRECTION = 0;
+  LEFT_WAITING_AREA = 1;
+}
+
+message TrafficLightVoteHistoryProto {
+  message VoteResult {
+    optional TrafficLightState state = 1;
+  }
+
+  optional TrafficLightDirection direction = 1;
+  repeated Timestamp time = 2;
+  repeated VoteResult value = 3;
+}
+
+message MultiTrafficLightVoteHistoryProto {
+  // Each direction has its own history cache
+  repeated TrafficLightVoteHistoryProto vote_history = 1;
+}
+
+message YellowLightObservationProto {
+  optional Timestamp first_flashing_green_observation = 1;
+  optional Timestamp latest_flashing_green_observation = 2;
+  optional Timestamp first_yellow_observation = 3;
+  optional Timestamp latest_yellow_observation = 4;
+}
+
+message TrafficLightHistoryManagerProto {
+  // key: traffic light id
+  map<string, TrafficLightStateHistoryProto> tl_perception_history = 1;
+  // key: lane id
+  map<string, MultiTrafficLightVoteHistoryProto> tl_vote_history = 2;
+  // key: traffic light id
+  map<string, YellowLightObservationProto> yellow_light_observations = 3;
+}
+
+message TrafficLightIndicationInfoProto {
+  optional string traffic_light_id = 1;
+  optional TlColor ind_color = 2;
+  optional TrafficLightDirection ind_color_turn_type = 3;
+  optional IndStatus ind_status = 4;
+}

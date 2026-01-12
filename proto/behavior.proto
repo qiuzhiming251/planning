@@ -1,0 +1,30 @@
+syntax = "proto2";
+
+package st;
+
+message Behavior {
+  enum FunctionId {
+    NONE = 0;
+    APA = 1;
+    ACC = 2;
+    LKA = 3;
+    LKA_PLUS = 4;
+    HW_NOA = 5;
+    CITY_NOA = 6;
+    MAPLESS_NOA = 7;
+  }
+  enum LaneChangeStyle {
+    LANE_CHANGE_STYLE_INVALID = 0;
+    LANE_CHANGE_STYLE_RADICAL = 1;
+    LANE_CHANGE_STYLE_CONSERVATE = 2;
+  }
+  optional FunctionId function_id = 1 [default = NONE];
+  optional uint32 tunnel = 2;                    // tunnel
+  optional bool auto_navi_lc_enable_status = 3;  // for LCC AI driver
+  optional bool system_break_stop = 4;
+  optional double dynamic_headway = 5;
+  optional bool traffic_light_func_enable = 6;
+  optional double cruising_speed_limit = 7;
+  optional FunctionId driver_select_function_id = 8;
+  optional LaneChangeStyle lane_change_style = 9;
+}

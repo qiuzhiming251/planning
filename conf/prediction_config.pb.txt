@@ -1,0 +1,22 @@
+platform_config {
+  platform: "x86"
+  online_visualize: true
+  num_threads_pred: 10
+  num_threads_plan: 3
+  bind_core_num: "4,5"
+}
+
+platform_config {
+  platform: "orin"
+  online_visualize: false
+  num_threads_pred: 10
+  num_threads_plan: 15
+}
+
+pnp_laneformer_config {
+  inhibit_eff_lc: false
+  inhibit_eff_lc_dist_to_junction: 150
+  junction_navigation_reset_distance: 200
+  navigation_reset_diff_dis: 100
+  handle_special_split: true
+}
